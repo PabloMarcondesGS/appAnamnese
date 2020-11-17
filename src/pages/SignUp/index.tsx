@@ -92,7 +92,7 @@ const SignUp: React.FC = () => {
                     contentContainerStyle={{ flex: 1}}
                 >
                     <Container>
-                        <Image source={logoImg}/>
+                        {/* <Image source={logoImg}/> */}
                         <View>
                             <Title>Crie sua conta</Title>
                         </View>
