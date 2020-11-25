@@ -22,7 +22,7 @@ import getValidationErrors from '../../ultils/getValidationErrors';
 import Input from '../../componentes/Input';
 import Button from '../../componentes/Button';
 
-import logoImg from '../../assets/logo.png';
+import logoImg from '../../assets/cyb-logo-maior.png';
 
 import {
     Container,
@@ -91,9 +91,10 @@ const SignIn: React.FC = () => {
                     contentContainerStyle={{ flex: 1}}
                 >
                     <Container>
-                        {/* <Image source={logoImg}/> */}
+                        <Image source={logoImg}/>
+
                         <View>
-                            <Title>Faça seu Login</Title>
+                            <Title>Teste seu hálito</Title>
                         </View>
 
                         <Form ref={formRef} onSubmit={handleSignIn}>
@@ -135,7 +136,7 @@ const SignIn: React.FC = () => {
             </KeyboardAvoidingView>
 
             <CreateAccountButton onPress={() => navigation.navigate('SignUp')}>
-                    <Icon name="log-in" size={20} color="#ff9000"/>
+                    <Icon name="log-in" size={20} color="#ADD8E6"/>
                     <CreateAccountButtonText>Criar uma conta</CreateAccountButtonText>
             </CreateAccountButton>
 
