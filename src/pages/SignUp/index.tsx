@@ -20,7 +20,7 @@ import getValidationErrors from '../../ultils/getValidationErrors';
 import Input from '../../componentes/Input';
 import Button from '../../componentes/Button';
 
-import logoImg from '../../assets/logo.png';
+import logoImg from '../../assets/cyb-logo-maior.png';
 
 import {
     Container,
@@ -92,7 +92,7 @@ const SignUp: React.FC = () => {
                     contentContainerStyle={{ flex: 1}}
                 >
                     <Container>
-                        {/* <Image source={logoImg}/> */}
+                        <Image source={logoImg}/>
                         <View>
                             <Title>Crie sua conta</Title>
                         </View>
@@ -142,7 +142,7 @@ const SignUp: React.FC = () => {
             </KeyboardAvoidingView>
 
             <BackToSignIn onPress={() => navigation.goBack()}>
-                    <Icon name="arrow-left" size={20} color="#fff"/>
+                    <Icon name="arrow-left" size={20} color="#ADD8E6"/>
                     <BackToSignInText>Voltar para login</BackToSignInText>
             </BackToSignIn>
 
