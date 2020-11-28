@@ -36,6 +36,7 @@ const UploadPicture: React.FC = () => {
       .catch(function(error) {
         setLoading(false);
       });
+    setLoading(false);
   }, [])
 
   useEffect(() => {
