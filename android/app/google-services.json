@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "70831838836",
+    "firebase_url": "https://rei-do-gado-ca10c.firebaseio.com",
+    "project_id": "rei-do-gado-ca10c",
+    "storage_bucket": "rei-do-gado-ca10c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:70831838836:android:6f62412e20f937f0f36321",
+        "android_client_info": {
+          "package_name": "com.appgobarber"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "70831838836-e9q6lvcdcop49k0dhb2hdpfeuetstbte.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhvlIv4NNLVkesxNJxYrE7MDg9QRFECXM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "70831838836-e9q6lvcdcop49k0dhb2hdpfeuetstbte.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

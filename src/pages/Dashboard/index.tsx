@@ -1,8 +1,8 @@
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { NavigationContainer } from '@react-navigation/native';
 import React from 'react';
-import { View, Button, Text, TouchableOpacity, TextInput, Picker } from 'react-native';
-import Icon from 'react-native-vector-icons/Feather';
+
+import {  Button, TouchableOpacity, TextInput, Picker } from 'react-native';
+// import Icon from 'react-native-vector-icons/Feather';
 import { ButtonText } from '../../componentes/Button/styles';
 import { Formik, Field, Form, FormikHelpers } from 'formik';
 import styles from './styles';
@@ -69,13 +69,15 @@ const initialValues: ValuesForm = {
   payments_late_days: 0,
   payment_differences: 0,
 };
+import { View, Text } from 'react-native';
+import Icon from 'react-native-vector-icons/Feather';
 
-import { useAuth } from '../../hooks/auth';
+
+import UploadPicture from '../UploadPicture'
+import Questions from '../Questions'
 
 const Dashboard: React.FC = () => {
-    // const { signOut } = useAuth();
-
-   const Drawer = createDrawerNavigator();
+    const Drawer = createDrawerNavigator();
 
     function App() {
         return (
@@ -240,6 +242,62 @@ const Dashboard: React.FC = () => {
                 
                   />
               </Drawer.Navigator>
+=======
+      return (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}} >
+          <Text>Open up App.js to start working on your app!</Text>
+        </View>
+      );
+    }
+
+    return (
+        // <View style={{ flex: 1, justifyContent: 'center'}}>
+      <Drawer.Navigator 
+        initialRouteName="App"
+        drawerStyle={{
+          backgroundColor: "#313131",
+          paddingVertical: 20
+        }}
+        drawerContentOptions={{
+          activeBackgroundColor: "#fff",
+          inactiveTintColor: "#fff"
+        }}>
+
+          
+        <Drawer.Screen 
+            name="App" 
+            component={App} 
+            options={
+              {
+                drawerLabel: (({focused}) => <Text style={{color: focused ? '#313131' : '#fff' }}>Home</Text>),
+                drawerIcon: (({focused}) => <Icon color={focused ? '#313131' : '#fff' } name="home" />)
+              }
+            } 
+        />
+        <Drawer.Screen 
+          name="MeuApp" 
+          component={Questions} 
+          options={
+            {
+              drawerLabel: (({focused}) => <Text style={{color: focused ? '#313131' : '#fff' }}>Meu App</Text>),
+              drawerIcon: (({focused}) => <Icon color={focused ? '#313131' : '#fff' } name="chat" />)
+            }
+          }
+        
+          />
+        <Drawer.Screen 
+          name="UploadPicture" 
+          component={UploadPicture} 
+          options={
+            {
+              drawerLabel: (({focused}) => <Text style={{color: focused ? '#313131' : '#fff' }}>Upload Picture</Text>),
+              drawerIcon: (({focused}) => <Icon color={focused ? '#313131' : '#fff' } name="chat" />)
+            }
+          }
+        
+          />
+      </Drawer.Navigator>
+>>>>>>> 17f80979e4a89909fb82acb489b998626a7e3de2
     );
 };
 
