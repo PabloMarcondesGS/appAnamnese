@@ -122,6 +122,7 @@ const SignUp: React.FC = () => {
                                     passwordInputRef.current?.focus()
                                 }}
                             />
+                            
                             <Input
                                 ref={passwordInputRef}
                                 secureTextEntry
