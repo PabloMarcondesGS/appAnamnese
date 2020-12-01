@@ -1,10 +1,10 @@
 import React, { createContext, useCallback, useState, useContext, useEffect } from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
+import auth from '@react-native-firebase/auth';
 import api from '../services/api';
 
 interface AuthState {
-    token: string;
-    user: object;
+    user: any;
 }
 
 interface SignInCredentials {
@@ -13,7 +13,7 @@ interface SignInCredentials {
 }
 
 interface AuthContextData {
-    user:  object;
+    user:  any;
     loading: boolean;
     signIn(credencials: SignInCredentials): Promise<void>;
     signOut(): void;
@@ -28,13 +28,12 @@ const AuthProvider: React.FC = ({ children }) => {
     useEffect(() => {
 
         async function loadStoragedData(): Promise<void>{
-            const [token, user] = await AsyncStorage.multiGet([
-                '@GoBarber:token',
+            const [user] = await AsyncStorage.multiGet([
                 '@GoBarber:user'
             ]);
 
-            if (token[1] && user[1]) {
-                setData({ token: token[1], user: JSON.parse(user[1]) })
+            if (user[1]) {
+                setData({ user: JSON.parse(user[1]) })
             }
 
             setLoading(false);
@@ -43,25 +42,33 @@ const AuthProvider: React.FC = ({ children }) => {
         loadStoragedData();
     }, []);
 
-    const signIn = useCallback(async ({ email, password }) => {
-        const response = await api.post('sessions', {
-            email,
-            password,
-        });
+    const signIn = useCallback(async ({ email,  password}) => {
+        auth()
+            .signInWithEmailAndPassword(email, password)
+            .then(async function(user){
+                console.log(user.user);
 
-        const { token, user } = response.data;
+                await AsyncStorage.multiSet([
+                    ['@GoBarber:user', JSON.stringify(user.user)]
+                ])
+        
+                setData({ user: user.user });
+            })
+            .catch(error => {
+                if (error.code === 'auth/email-already-in-use') {
+                console.log('That email address is already in use!');
+                }
 
-        await AsyncStorage.multiSet([
-            ['@GoBarber:token', token],
-            ['@GoBarber:user', JSON.stringify(user)]
-        ])
+                if (error.code === 'auth/invalid-email') {
+                console.log('That email address is invalid!');
+                }
 
-        setData({ token, user });
+                console.error(error);
+            });
     }, [])
 
     const signOut = useCallback(async () => {
         await AsyncStorage.multiRemove([
-            '@GoBarber:token',
             '@GoBarber:user'
         ]);
 
