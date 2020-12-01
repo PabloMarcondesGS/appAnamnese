@@ -6,6 +6,7 @@ import storage from '@react-native-firebase/storage';
 import RNFetchBlob from 'rn-fetch-blob'
 
 import { TouchableImage, ViewStyled } from './styles'
+import Header from '../../componentes/Header';
 
 const UploadPicture: React.FC = () => {
   const [images, setImages] = useState<String[]>([]);
@@ -107,7 +108,9 @@ const UploadPicture: React.FC = () => {
       <ActivityIndicator size="large" color="#6EE7D3" />
     </View>
   ) : (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}} >
+    <View style={{flex: 1}}>
+    <Header />
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#42b6d9'}} >
         {isValid ? (
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
             <ViewStyled>
@@ -115,14 +118,15 @@ const UploadPicture: React.FC = () => {
                 <Icon
                   name="image"
                   size={80}
-                  color="#4682B4" />
+                  color="#fff" />
               </TouchableImage>
             </ViewStyled>
-            <Text>Clique para selecionar uma imagem</Text>
+            <Text style={{color: "#fff"}}>Clique para selecionar uma imagem</Text>
           </View>
         ) : (
           <Text>Usuário já fez upload este mês</Text>
         )}
+    </View>
     </View>
   );
 };

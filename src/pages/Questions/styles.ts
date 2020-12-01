@@ -1,5 +1,4 @@
 import styled from 'styled-components/native';
-import { Platform } from 'react-native';
 
 import { StyleSheet } from 'react-native';
 
@@ -7,6 +6,7 @@ export const Container = styled.ScrollView`
   flex: 1;
   background: #42b6d9;
   padding: 40px;
+  height: 100%;
 `;
 
 export const TextStyled = styled.Text`

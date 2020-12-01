@@ -7,14 +7,18 @@ import Icon from 'react-native-vector-icons/Feather';
 
 import UploadPicture from '../UploadPicture'
 import Questions from '../Questions'
+import HeaderHome from '../../componentes/HeaderHome';
 
 const Dashboard: React.FC = () => {
     const Drawer = createDrawerNavigator();
 
     function App() {
       return (
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}} >
-          <Text>Open up App.js to start working on your app!</Text>
+        <View style={{ flex: 1 }}>
+          <HeaderHome />
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#42b6d9' }} >
+            <Text>Open up App.js to start working on your app!</Text>
+          </View>
         </View>
       );
     }

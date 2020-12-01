@@ -8,8 +8,9 @@ import { TouchableOpacity} from 'react-native';
 import { Container, styles, TextStyled, ViewContainer, TitleStyled } from './styles'
 import { Card, Title, Paragraph, Checkbox, Button } from 'react-native-paper';
 import { useAuth } from '../../hooks/auth';
+import Header from '../../componentes/Header';
 
-const Questions: React.FC = () => {
+const Questions: React.FC = (props: any) => {
   const { user } = useAuth();
   const navigation = useNavigation();
 
@@ -63,6 +64,8 @@ const Questions: React.FC = () => {
   }, [user.uid])
 
   return (
+    <View style={{ flex: 1 }}>
+    <Header toggleDrawer={props.navigation.toggleDrawer} />
     <Container>
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}} >
           {isAnsered ? (
@@ -279,8 +282,8 @@ const Questions: React.FC = () => {
             </ViewContainer>
           )}
       </View>
-            
     </Container>
+    </View>
   );
 };
 
