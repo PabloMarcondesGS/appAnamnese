@@ -10,7 +10,7 @@ export const Container = styled.View<ContainerProps>`
     width: 100%;
     height: 60px;
     padding: 0 16px;
-    background: #808080;
+    background: #fff;
     border-radius: 10px;
     margin-bottom: 8px;
     border-width: 2px;
@@ -30,7 +30,7 @@ export const Container = styled.View<ContainerProps>`
 
 export const TextInput = styled.TextInput`
     flex: 1;
-    color: #D3D3D3;
+    color: #808080;
     font-size: 16px;
     font-family: 'RobotoSlab-Regular';
 `;

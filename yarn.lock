@@ -1152,6 +1152,13 @@
     sudo-prompt "^9.0.0"
     wcwidth "^1.0.1"
 
+"@react-native-community/datetimepicker@^3.0.6":
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/@react-native-community/datetimepicker/-/datetimepicker-3.0.6.tgz#ac5ef61b2724bc8d80e2e32b2a77e74a7794c78d"
+  integrity sha512-w+c+U7sR3JVVI+oJE8ZoprBU4d8TG2KG6I+WeM5DCnszxSHS+pJVZPSc5hWHMTDb12PkBlNJDpMoasyDGLPUdw==
+  dependencies:
+    invariant "^2.2.4"
+
 "@react-native-community/eslint-config@^1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@react-native-community/eslint-config/-/eslint-config-1.1.0.tgz#2dacad06dd44d13e778510864473fc6091f080c0"
@@ -2488,6 +2495,11 @@ data-urls@^1.1.0:
     abab "^2.0.0"
     whatwg-mimetype "^2.2.0"
     whatwg-url "^7.0.0"
+
+date-fns@^2.16.1:
+  version "2.16.1"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.16.1.tgz#05775792c3f3331da812af253e1a935851d3834b"
+  integrity sha512-sAJVKx/FqrLYHAQeN7VpJrPhagZc9R4ImZIWYRFZaaohR3KzmuK88touwsSwSVT8Qcbd4zoDsnGfX4GFB4imyQ==
 
 dayjs@^1.8.15:
   version "1.9.3"
@@ -5949,6 +5961,13 @@ react-is@^16.12.0, react-is@^16.13.0, react-is@^16.7.0, react-is@^16.8.1, react-
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
+
+react-native-camera@^3.40.0:
+  version "3.40.0"
+  resolved "https://registry.yarnpkg.com/react-native-camera/-/react-native-camera-3.40.0.tgz#69845991e46b0892cc2b50322d49b18f292c3202"
+  integrity sha512-Ur0hZqZcl3SntTVMB9GxuiLYpQxqwgzhQVb+7EGae4WjfDzQEwlGF0bJ7UpZyeUTb1oZmsiSib58xUckn11XMw==
+  dependencies:
+    prop-types "^15.6.2"
 
 react-native-gesture-handler@^1.8.0:
   version "1.8.0"

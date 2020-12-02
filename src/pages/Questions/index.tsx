@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { View } from 'react-native';
+import { View, ActivityIndicator } from 'react-native';
 import database from '@react-native-firebase/database';
 import { useNavigation } from '@react-navigation/native';
 
@@ -13,6 +13,7 @@ import Header from '../../componentes/Header';
 const Questions: React.FC = (props: any) => {
   const { user } = useAuth();
   const navigation = useNavigation();
+  const [loading, setLoading] = useState(true);
 
   const [isAnsered, setIsAnsered] = useState(false);
 
@@ -53,17 +54,25 @@ const Questions: React.FC = (props: any) => {
   ]);
 
   useEffect(() => {
+    setLoading(true);
     database()
       .ref(`questions/user/${user.uid}`)
       .once('value')
       .then(snapshot => {
+        console.log(snapshot)
         if (snapshot.val()) {
           setIsAnsered(true);
         }
+        setLoading(false);
       });
+    setLoading(false);
   }, [user.uid])
 
-  return (
+  return loading ? (
+    <View style={{ flex: 1 }}>
+      <ActivityIndicator size="large" color="#999" />
+    </View>
+  ) : (
     <View style={{ flex: 1 }}>
     <Header toggleDrawer={props.navigation.toggleDrawer} />
     <Container>

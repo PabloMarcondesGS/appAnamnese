@@ -6,8 +6,20 @@ export const Container = styled.View`
     flex: 1;
     align-items: center;
     justify-content: center;
-    margin-top: 30px;
     padding: 0 30px ${Platform.OS == 'android' ? 150 : 40}px;
+    background-color: #42b6d9;
+`;
+
+export const ViewImage = styled.View`
+    background-color: #fff;
+    border-radius: 45px;
+    padding: 10px;
+    width: 90px;
+    height: 90px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 14px 0;
 `;
 
 export const Title = styled.Text`

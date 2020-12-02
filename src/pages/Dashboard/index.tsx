@@ -7,15 +7,16 @@ import Icon from 'react-native-vector-icons/Feather';
 
 import UploadPicture from '../UploadPicture'
 import Questions from '../Questions'
-import HeaderHome from '../../componentes/HeaderHome';
+import Profile from '../Profile'
+import Header from '../../componentes/Header';
 
 const Dashboard: React.FC = () => {
     const Drawer = createDrawerNavigator();
-
-    function App() {
+  
+    function App(props: any) {
       return (
         <View style={{ flex: 1 }}>
-          <HeaderHome />
+          <Header toggleDrawer={props.navigation.toggleDrawer} />
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#42b6d9' }} >
             <Text>Open up App.js to start working on your app!</Text>
           </View>
@@ -53,7 +54,7 @@ const Dashboard: React.FC = () => {
           options={
             {
               drawerLabel: (({focused}) => <Text style={{color: focused ? '#313131' : '#fff' }}>Meu App</Text>),
-              drawerIcon: (({focused}) => <Icon color={focused ? '#313131' : '#fff' } name="chat" />)
+              drawerIcon: (({focused}) => <Icon color={focused ? '#313131' : '#fff' } name="list" />)
             }
           }
         
@@ -63,12 +64,23 @@ const Dashboard: React.FC = () => {
           component={UploadPicture} 
           options={
             {
-              drawerLabel: (({focused}) => <Text style={{color: focused ? '#313131' : '#fff' }}>Upload Picture</Text>),
-              drawerIcon: (({focused}) => <Icon color={focused ? '#313131' : '#fff' } name="chat" />)
+              drawerLabel: (({focused}) => <Text style={{color: focused ? '#313131' : '#fff' }}>Enviar foto</Text>),
+              drawerIcon: (({focused}) => <Icon color={focused ? '#313131' : '#fff' } name="camera" />)
             }
           }
         
           />
+          <Drawer.Screen 
+            name="Profile" 
+            component={Profile} 
+            options={
+              {
+                drawerLabel: (({focused}) => <Text style={{color: focused ? '#313131' : '#fff' }}>Meu perfil</Text>),
+                drawerIcon: (({focused}) => <Icon color={focused ? '#313131' : '#fff' } name="user" />)
+              }
+            }
+          
+            />
       </Drawer.Navigator>
     );
 };

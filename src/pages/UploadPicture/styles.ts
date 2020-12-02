@@ -18,3 +18,18 @@ export const ViewStyled = styled.View`
   justify-content: center;
   margin-bottom: 20px;
 `;
+
+export const TextTitleNumber = styled.Text`
+  color: white;
+  font-size: 40px;
+  margin-bottom: 14px;
+  padding: 0 24px;
+`;
+
+export const TextTitle = styled.Text`  
+  color: white;
+  font-size: 18px;
+  margin-bottom: 14px;
+  padding: 0 24px;
+  text-align: center;
+`;
