@@ -25,7 +25,7 @@ const Header: React.FC = ({ toggleDrawer }) => {
         <FeatherIcon name="menu" size={25} />
       </TouchableOpacity>
       <Image  style={{ width: 40, height: 40 }} source={logoImg}/>
-      <TouchableOpacity style={{ marginRight: 24 }}onPress={handleLogout}>
+      <TouchableOpacity style={{ marginRight: 24 }} onPress={handleLogout}>
         <FeatherIcon name="power" size={20} />
       </TouchableOpacity>
     </View>

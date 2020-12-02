@@ -46,8 +46,6 @@ const AuthProvider: React.FC = ({ children }) => {
         auth()
             .signInWithEmailAndPassword(email, password)
             .then(async function(user){
-                console.log(user.user);
-
                 await AsyncStorage.multiSet([
                     ['@GoBarber:user', JSON.stringify(user.user)]
                 ])

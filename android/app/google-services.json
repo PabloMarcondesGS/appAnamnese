@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "70831838836",
-    "firebase_url": "https://rei-do-gado-ca10c.firebaseio.com",
-    "project_id": "rei-do-gado-ca10c",
-    "storage_bucket": "rei-do-gado-ca10c.appspot.com"
+    "project_number": "618945172885",
+    "firebase_url": "https://newcyb-a1771.firebaseio.com",
+    "project_id": "newcyb-a1771",
+    "storage_bucket": "newcyb-a1771.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:70831838836:android:6f62412e20f937f0f36321",
+        "mobilesdk_app_id": "1:618945172885:android:14f33731036db00cb5129c",
         "android_client_info": {
           "package_name": "com.appgobarber"
         }
       },
       "oauth_client": [
         {
-          "client_id": "70831838836-e9q6lvcdcop49k0dhb2hdpfeuetstbte.apps.googleusercontent.com",
+          "client_id": "618945172885-l4aehnmcan79chbdec4qugnjmubhh77t.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBhvlIv4NNLVkesxNJxYrE7MDg9QRFECXM"
+          "current_key": "AIzaSyDgPrtjGG5deX9ofrXnBVm275en-8Of5dc"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "70831838836-e9q6lvcdcop49k0dhb2hdpfeuetstbte.apps.googleusercontent.com",
+              "client_id": "618945172885-l4aehnmcan79chbdec4qugnjmubhh77t.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
