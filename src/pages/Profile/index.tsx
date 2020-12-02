@@ -135,6 +135,7 @@ const Profile: React.FC = (props: any) => {
           try {
             await task;
           } catch (e) {
+            setLoading(false);
             console.error(e);
             Alert.alert('Erro ao enviar a imagem');
             return;
