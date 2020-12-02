@@ -13,7 +13,8 @@ import { useNavigation } from '@react-navigation/native';
 import * as Yup from 'yup';
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
-import api from '../../services/api';
+import auth from '@react-native-firebase/auth';
+import database from '@react-native-firebase/database';
 
 import getValidationErrors from '../../ultils/getValidationErrors';
 
@@ -37,7 +38,6 @@ interface SignUpFormData {
 
 const SignUp: React.FC = () => {
     const formRef = useRef<FormHandles>(null);
-
     const navigation = useNavigation();
 
     const emailInputRef = useRef<TextInput>(null);
@@ -55,17 +55,28 @@ const SignUp: React.FC = () => {
             await schema.validate(data, {
                 abortEarly: false,
             });
-
-            await api.post('/users', data)
-
+            auth()
+                .createUserWithEmailAndPassword(data.email, data.password)
+                .then(function(user: any) {
+                    database().ref(`users/${user.user.uid}`).set({name: data.name});
+                })
+                .catch (function (error) {
+                    if (error.code === 'auth/email-already-in-use') {
+                        Alert.alert('Email já cadastrado');
+                    }
+                    if (error.code === 'auth/invalid-email') {
+                        console.log('Email invalido!');
+                    }
+                    return;
+                })
             Alert.alert(
                 'Cadastro realizado com sucesso!',
                 'Você já pode logar na aplicação'
             )
 
             navigation.goBack();
-
         } catch (err) {
+            console.log(err)
             if (err instanceof Yup.ValidationError){
                 const errors =  getValidationErrors(err);
 
