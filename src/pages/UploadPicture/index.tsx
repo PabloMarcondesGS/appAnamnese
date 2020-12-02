@@ -121,7 +121,17 @@ const UploadPicture: React.FC = () => {
             <Text>Clique para selecionar uma imagem</Text>
           </View>
         ) : (
-          <Text>Usuário já fez upload este mês</Text>
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <ViewStyled>
+              <TouchableImage onPress={handleUpdatePicture}>
+                <Icon
+                  name="image"
+                  size={80}
+                  color="#4682B4" />
+              </TouchableImage>
+            </ViewStyled>
+            <Text>Clique para selecionar uma imagem</Text>
+          </View>
         )}
     </View>
   );

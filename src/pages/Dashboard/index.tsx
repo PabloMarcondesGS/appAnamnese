@@ -207,48 +207,47 @@ const Dashboard: React.FC = () => {
         );
       }
 
-    return (
-              <Drawer.Navigator 
-                initialRouteName="App"
-                drawerStyle={{
-                  backgroundColor: "#313131",
-                  paddingVertical: 20
-                }}
-                drawerContentOptions={{
-                  activeBackgroundColor: "#fff",
-                  inactiveTintColor: "#fff"
-                }}>
+    // return (
+    //           <Drawer.Navigator 
+    //             initialRouteName="App"
+    //             drawerStyle={{
+    //               backgroundColor: "#313131",
+    //               paddingVertical: 20
+    //             }}
+    //             drawerContentOptions={{
+    //               activeBackgroundColor: "#fff",
+    //               inactiveTintColor: "#fff"
+    //             }}>
 
                   
-                <Drawer.Screen 
-                    name="App" 
-                    component={App} 
-                    options={
-                      {
-                        drawerLabel: (({focused}) => <Text style={{color: focused ? '#313131' : '#fff' }}>Primeira Tela</Text>),
-                        drawerIcon: (({focused}) => <Icon color={focused ? '#313131' : '#fff' } name="home" />)
-                      }
-                    } 
-                />
-                <Drawer.Screen 
-                  name="MeuApp" 
-                  component={AppTwo} 
-                  options={
-                    {
-                      drawerLabel: (({focused}) => <Text style={{color: focused ? '#313131' : '#fff' }}>Anamnese</Text>),
-                      drawerIcon: (({focused}) => <Icon color={focused ? '#313131' : '#fff' } name="file-text" />)
-                    }
-                  }
+    //             <Drawer.Screen 
+    //                 name="App" 
+    //                 component={App} 
+    //                 options={
+    //                   {
+    //                     drawerLabel: (({focused}) => <Text style={{color: focused ? '#313131' : '#fff' }}>Primeira Tela</Text>),
+    //                     drawerIcon: (({focused}) => <Icon color={focused ? '#313131' : '#fff' } name="home" />)
+    //                   }
+    //                 } 
+    //             />
+    //             <Drawer.Screen 
+    //               name="MeuApp" 
+    //               component={AppTwo} 
+    //               options={
+    //                 {
+    //                   drawerLabel: (({focused}) => <Text style={{color: focused ? '#313131' : '#fff' }}>Anamnese</Text>),
+    //                   drawerIcon: (({focused}) => <Icon color={focused ? '#313131' : '#fff' } name="file-text" />)
+    //                 }
+    //               }
                 
-                  />
-              </Drawer.Navigator>
-=======
-      return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}} >
-          <Text>Open up App.js to start working on your app!</Text>
-        </View>
-      );
-    }
+    //               />
+    //           </Drawer.Navigator>
+      // return (
+      //   <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}} >
+      //     <Text>Open up App.js to start working on your app!</Text>
+      //   </View>
+      // );
+    // }
 
     return (
         // <View style={{ flex: 1, justifyContent: 'center'}}>
@@ -297,7 +296,6 @@ const Dashboard: React.FC = () => {
         
           />
       </Drawer.Navigator>
->>>>>>> 17f80979e4a89909fb82acb489b998626a7e3de2
     );
 };
 
