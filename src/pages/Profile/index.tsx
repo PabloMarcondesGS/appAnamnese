@@ -124,15 +124,15 @@ const Profile: React.FC = (props: any) => {
             setLoading(false);
             return;
           }
-    
           const source = { uri: response.uri };
           const filename = source.uri.substring(source.uri.lastIndexOf('/') + 1);
-          const fileUri = await getPathForFirebaseStorage(source.uri)
-          const task = storage()
-            .ref(`images/users`)
-            .child(`${filename}----${user.uid}----`)
-            .putFile(fileUri);
+          const uploadUri = Platform.OS === 'ios' ? source.uri.replace('file://', '') : source.uri;
+          setImageUser(uploadUri)
           try {
+            const task = storage()
+              .ref(`images/users`)
+              .child(`${filename}----${user.uid}----`)
+              .putFile(uploadUri);
             await task;
           } catch (e) {
             setLoading(false);
