@@ -2,9 +2,9 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Text, View, Alert, Platform, ActivityIndicator, Image } from 'react-native';
 import { Button } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Feather';
-import ImagePicker from 'react-native-image-picker'
 import storage from '@react-native-firebase/storage';
 import RNFetchBlob from 'rn-fetch-blob'
+import AsyncStorage from '@react-native-community/async-storage';
 
 import { useAuth } from '../../hooks/auth';
 import { TouchableImage, ViewStyled, TextTitleNumber, TextTitle } from './styles'
@@ -66,6 +66,29 @@ const UploadPicture: React.FC = (props: any) => {
     setLoading(false);
   }, [images, user])
 
+  useEffect(() => {
+    setLoading(true);
+    async function loadStoragedData(): Promise<void>{
+        const tutorial = await AsyncStorage.getItem('@appAnamnese:tutorial');
+
+        if (tutorial) {
+          setStepOne(false)
+          setStepTwo(false)
+          setStepThree(false)
+          setStepFour(true)
+        } else {
+          setStepOne(true)
+          setStepTwo(false)
+          setStepThree(false)
+          setStepFour(false)
+        }
+
+        setLoading(false);
+    }
+
+    loadStoragedData();
+}, []);
+
   async function getPathForFirebaseStorage (uri: any) {
     if (Platform.OS==="ios") return uri
     const stat = await RNFetchBlob.fs.stat(uri)
@@ -123,10 +146,11 @@ const UploadPicture: React.FC = (props: any) => {
     setStepFour(false)
   }, []);
 
-  const handleStepFour = useCallback(() => {
+  const handleStepFour = useCallback(async () => {
     setStepOne(false)
     setStepTwo(false)
     setStepThree(false)
+    const tutorial = await AsyncStorage.setItem('@appAnamnese:tutorial', 'isComplet');
     setStepFour(true)
   }, []);
 

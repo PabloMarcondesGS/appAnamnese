@@ -1,7 +1,6 @@
 import React, { createContext, useCallback, useState, useContext, useEffect } from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
 import auth from '@react-native-firebase/auth';
-import api from '../services/api';
 
 interface AuthState {
     user: any;
