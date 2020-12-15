@@ -10,7 +10,7 @@ export const Container = styled.View`
 `;
 
 export const ForgotPassword = styled.TouchableOpacity`
-    margin-top: 24px;
+    margin-top: 12px;
 `;
 
 export const ForgotPasswordText = styled.Text`

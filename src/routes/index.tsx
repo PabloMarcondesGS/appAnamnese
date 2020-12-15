@@ -2,7 +2,8 @@ import React from 'react';
 import { View, ActivityIndicator } from 'react-native';
 
 import AuthRoutes from './auth.routes';
-import AppRoutes from './app.routes';
+import UsersRoutes from './users.routes';
+// import MedicRoutes from './medics.routes';
 
 import { useAuth } from '../hooks/auth';
 
@@ -16,7 +17,10 @@ const Routes: React.FC = () => {
             </View>
         )
     }
-    return user ? <AppRoutes /> : <AuthRoutes />;
+    if (user) {
+        return <UsersRoutes />;
+    }
+    return <AuthRoutes />
 };
 
 export default Routes;

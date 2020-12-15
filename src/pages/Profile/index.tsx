@@ -13,7 +13,7 @@ import {
     ActivityIndicator,
     TouchableOpacity
 } from 'react-native';
-import { format, parseISO, parse } from 'date-fns';
+import { format } from 'date-fns';
 import Icon from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
 import * as Yup from 'yup';
@@ -213,8 +213,6 @@ const Profile: React.FC = (props: any) => {
         }
         setLoading(false);
       }, [images, user])
-
-      console.log('aqui',imageUser)
 
     return loading ? (
         <View style={{ flex: 1 }}>

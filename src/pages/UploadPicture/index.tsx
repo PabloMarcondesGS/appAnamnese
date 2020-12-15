@@ -5,6 +5,8 @@ import Icon from 'react-native-vector-icons/Feather';
 import storage from '@react-native-firebase/storage';
 import RNFetchBlob from 'rn-fetch-blob'
 import AsyncStorage from '@react-native-community/async-storage';
+import database from '@react-native-firebase/database';
+import { format } from 'date-fns';
 
 import { useAuth } from '../../hooks/auth';
 import { TouchableImage, ViewStyled, TextTitleNumber, TextTitle } from './styles'
@@ -112,7 +114,6 @@ const UploadPicture: React.FC = (props: any) => {
       try {
         await task;
       } catch (e) {
-        console.error(e);
         Alert.alert('Erro ao enviar a imagem');
         return;
       }
@@ -154,7 +155,7 @@ const UploadPicture: React.FC = (props: any) => {
     setStepFour(true)
   }, []);
 
-  const onChangePhoto = useCallback(async (newPhoto): any => {
+  const onChangePhoto = useCallback(async (newPhoto) => {
     setPhoto(newPhoto);
     if(newPhoto) {
       const source = { uri: newPhoto };
@@ -164,11 +165,26 @@ const UploadPicture: React.FC = (props: any) => {
       const task = storage()
         .ref(`images/${month}`)
         .child(`${filename}----${user.uid}----`)
-        .putFile(fileUri);
+        .putFile(fileUri)
+        .then(snapshot => {
+          const date = format(new Date(), 'dd/MM/yyyy');
+          database()
+            .ref(`exams`)
+            .push({
+              user: user.uid,
+              image: snapshot.metadata.fullPath,
+              date,
+              active: true
+            }).then(function (value) {
+              const splitVal = String(value).split('/');
+              database()
+                .ref(`exams/${String(value).split('/')[splitVal.length - 1]}`)
+                .update({ id: String(value).split('/')[splitVal.length - 1] });
+            });
+        });
       try {
         await task;
       } catch (e) {
-        console.error(e);
         Alert.alert('Erro ao enviar a imagem');
         return;
       }
@@ -180,7 +196,7 @@ const UploadPicture: React.FC = (props: any) => {
       setLoading(false);
     }
     setIsCameraVisible(false);
-    handleUpdatePicture();
+    // handleUpdatePicture();
   }, [user]);
 
   return loading ? (
