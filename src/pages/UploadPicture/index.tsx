@@ -101,31 +101,6 @@ const UploadPicture: React.FC = (props: any) => {
     setIsCameraVisible(false);
   }, []);
 
-  const handleUpdatePicture = useCallback(async () => {
-    if(photo) {
-      const source = { uri: photo };
-      const month = new Date().getMonth();
-      const filename = source.uri.substring(source.uri.lastIndexOf('/') + 1);
-      const fileUri = await getPathForFirebaseStorage(source.uri)
-      const task = storage()
-        .ref(`images/${month}`)
-        .child(`${filename}----${user.uid}----`)
-        .putFile(fileUri);
-      try {
-        await task;
-      } catch (e) {
-        Alert.alert('Erro ao enviar a imagem');
-        return;
-      }
-      Alert.alert(
-        'Envio concluído!',
-        'Sua foto foi enviada para o nosso banco de dados'
-      );
-      setIsValid(false);
-      setLoading(false);
-    }
-  }, [user, photo]);
-
   const handleStepZero = useCallback(() => {
     setStepOne(true)
     setStepTwo(false)

@@ -42,8 +42,7 @@ const Dashboard: React.FC = () => {
               drawerIcon: (({focused}) => <Icon color={focused ? '#313131' : '#fff' } name="user" />)
             }
           }
-        
-          />
+        />
       </Drawer.Navigator>
     );
 };

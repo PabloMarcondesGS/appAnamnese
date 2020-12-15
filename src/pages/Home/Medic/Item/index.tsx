@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ActivityIndicator } from 'react-native';
 import database from '@react-native-firebase/database';
 import { format } from 'date-fns';
+import { useNavigation } from '@react-navigation/native'
 
 import { 
   TitleStyled, 
@@ -11,7 +12,7 @@ import {
 } from './styles';
 
 const Item: React.FC = ({ item }: any) => {
-
+  const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState();
 
@@ -46,7 +47,7 @@ const Item: React.FC = ({ item }: any) => {
         {format(item.date, 'dd/MM/yyyy')}
       </TitleStyled>
       <ButtonStyled 
-        onPress={() => console.log(item)}
+        onPress={() => navigation.navigate('Exam', { item })}
         mode="contained">
         Ver imagem
       </ButtonStyled>

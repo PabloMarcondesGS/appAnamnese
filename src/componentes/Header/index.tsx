@@ -4,7 +4,7 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 import logoImg from '../../assets/cyb-logo-maior.png';
 import { useAuth } from '../../hooks/auth';
 
-const Header: React.FC = ({ toggleDrawer }) => {
+const Header: React.FC = ({ toggleDrawer, isHeader = true }) => {
   const { signOut } = useAuth();
 
   const handleLogout = useCallback(async () => {
@@ -22,7 +22,7 @@ const Header: React.FC = ({ toggleDrawer }) => {
       justifyContent: 'space-between'
     }}>
       <TouchableOpacity style={{ marginLeft: 16 }}onPress={() => toggleDrawer()}>
-        <FeatherIcon name="menu" size={25} />
+        <FeatherIcon name={isHeader ? 'menu' : 'arrow-left'} size={25} />
       </TouchableOpacity>
       <Image  style={{ width: 40, height: 40 }} source={logoImg}/>
       <TouchableOpacity style={{ marginRight: 24 }} onPress={handleLogout}>

@@ -70,7 +70,8 @@ const SignUp: React.FC = () => {
                         name: data.name,
                         email: data.email,
                         sex: male ? 'Masculino' : 'Feminino',
-                        birthDate: date
+                        birthDate: date,
+                        id: user.user.uid
                     });
                 })
                 .catch (function (error) {
@@ -101,6 +102,7 @@ const SignUp: React.FC = () => {
                 'Erro no cadastro',
                 'Ocorreu um erro ao fazer cadastro, tente novamente'
             );
+            setLoading(false);
         }
     }, [navigation, male, date]);
 
