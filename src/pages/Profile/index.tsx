@@ -62,12 +62,14 @@ const Profile: React.FC = (props: any) => {
             const schema = Yup.object().shape({
                 name: Yup.string().required('Nome obrigatório'),
             });
-
+ 
             await schema.validate(data, {
                 abortEarly: false,
             });
             
-            database().ref(`users/${user.uid}`).set({
+            database().ref(`users`)
+            .child(user.uid)
+            .update({
                 name: data.name,
                 sex: male ? 'Masculino' : 'Feminino',
                 birthDate: format(date, 'dd/MM/yyyy')

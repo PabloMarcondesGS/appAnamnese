@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { ActivityIndicator, View, Text } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { ActivityIndicator, View, Text, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native'
 import { Checkbox} from 'react-native-paper';
+import database from '@react-native-firebase/database';
 
 import { 
   TitleStyled, 
@@ -20,8 +21,24 @@ const Item: React.FC = ({ item }: any) => {
     if (item.active) 
       setActive(true)
     else
-      setInactive(true)
+      setActive(false)
   }, [item])
+
+  console.log(item.id)
+
+  const handleUpdateUser = useCallback(() => {
+    database().ref(`users`)
+    .child(item.id)
+    .update({
+      active: active ? false : true
+    })
+    .then(function () {
+      Alert.alert(
+        'Atualização realizada com sucesso!',
+        'Dados atualizados com sucesso.'
+    )
+    });
+  }, [active, item])
 
   return loading ? (
     <CardStyled style={{ flex: 1 }}>
@@ -56,10 +73,10 @@ const Item: React.FC = ({ item }: any) => {
           flexDirection: 'row' 
         }}>
           <Checkbox
-            status={inactive ? 'checked' : 'unchecked'}
+            status={!active ? 'checked' : 'unchecked'}
             onPress={() => {
-              setInactive(!inactive);
               setActive(inactive ? true : false);
+              handleUpdateUser()
             }} />
           <Text>Inativo</Text>
         </View>
@@ -72,7 +89,7 @@ const Item: React.FC = ({ item }: any) => {
               status={active ? 'checked' : 'unchecked'}
               onPress={() => {
                 setActive(!active);
-                setInactive(active ? true : false);
+                handleUpdateUser()
               }} />
             <Text>Ativo</Text>
           </View>
