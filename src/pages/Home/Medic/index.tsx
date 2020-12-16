@@ -58,20 +58,20 @@ const Home: React.FC = (props) => {
         <ActivityIndicator size="large" color="#fff" />
       </Container>
     ) : (
-       <Container>
-          <Header toggleDrawer={props.navigation.toggleDrawer} />
-          <Content>
-            <FlatListStyled
-              data={exams && exams.length ? exams : []}
-              renderItem={({ item }) => (
-                <Item
-                  item={item}
-                />
-              )}
-              keyExtractor={item => item.id}
-            />
-          </Content>
-       </Container>
+      <Container>
+        <Header toggleDrawer={props.navigation.toggleDrawer} />
+        <Content>
+          <FlatListStyled
+            data={exams && exams.length ? exams : []}
+            renderItem={({ item }) => (
+              <Item
+                item={item}
+              />
+            )}
+            keyExtractor={item => item.id}
+          />
+        </Content>
+      </Container>
     );
 };
 

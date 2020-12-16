@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { ActivityIndicator, ScrollView } from 'react-native';
+import { ActivityIndicator, Alert, ScrollView } from 'react-native';
 import storage from '@react-native-firebase/storage';
 import database from '@react-native-firebase/database';
 import * as Yup from 'yup';
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
 import { map } from 'lodash';
+import { format } from 'date-fns';
 
 import { 
   Container,
@@ -27,18 +28,10 @@ const Exam: React.FC = (props: any) => {
   const [products, setProducts] = useState([]);
   const [productsOne, setProductsOne] = useState<any []>([]);
   const [productOne, setProductOne] = useState('');
-  const [productsTwo, setProductsTwo] = useState<any []>([]);
-  const [productTwo, setProductTwo] = useState('');
-  const [productsThree, setProductsThree] = useState<any []>([]);
-  const [productThree, setProductThree] = useState('');
 
   const [tips, setTips] = useState([]);
   const [tipsOne, setTipsOne] = useState<any []>([]);
   const [tipOne, setTipOne] = useState('');
-  const [tipsTwo, setTipsTwo] = useState<any []>([]);
-  const [tipTwo, setTipTwo] = useState('');
-  const [tipsThree, setTipsThree] = useState<any []>([]);
-  const [tipThree, setTipThree] = useState('');
 
   const DATA = [
     {label: 'NÍVEL DE ALITOSE', value: ''},
@@ -89,52 +82,28 @@ const Exam: React.FC = (props: any) => {
   useEffect(() => {
     setLoading(true);
     let productsPickerOne: any[] = [];
-    let productsPickerTwo: any[] = [];
-    let productsPickerThree: any[] = [];
     productsPickerOne.push({ label: 'SELECIONE UM PRODUTO', value: '' })
-    productsPickerTwo.push({ label: 'SELECIONE UM PRODUTO', value: '' })
-    productsPickerThree.push({ label: 'SELECIONE UM PRODUTO', value: '' })
     products.map(productData => {
       const newProduct = { label: productData.description, value: productData.id }
       if (!productsPickerOne.find(prod => prod.id === productData.id)) {
         productsPickerOne.push(newProduct)
       }
-      if (!productsPickerTwo.find(prod => prod.id === productData.id)) {
-        productsPickerTwo.push(newProduct)
-      }
-      if (!productsPickerThree.find(prod => prod.id === productData.id)) {
-        productsPickerThree.push(newProduct)
-      }
     })
     setProductsOne(productsPickerOne);
-    setProductsTwo(productsPickerTwo);
-    setProductsThree(productsPickerThree);
     setLoading(false);
   }, [products])
 
   useEffect(() => {
     setLoading(true);
     let tipsPickerOne: any[] = [];
-    let tipsPickerTwo: any[] = [];
-    let tipsPickerThree: any[] = [];
     tipsPickerOne.push({ label: 'SELECIONE UMA DICA', value: '' })
-    tipsPickerTwo.push({ label: 'SELECIONE UMA DICA', value: '' })
-    tipsPickerThree.push({ label: 'SELECIONE UMA DICA', value: '' })
     tips.map(tipData => {
-      const newTip = { label: tipData.description, value: tipData.id }
+      const newTip = { label: tipData.description_small, value: tipData.id }
       if (!tipsPickerOne.find(prod => prod.id === tipData.id)) {
         tipsPickerOne.push(newTip)
       }
-      if (!tipsPickerTwo.find(prod => prod.id === tipData.id)) {
-        tipsPickerTwo.push(newTip)
-      }
-      if (!tipsPickerThree.find(prod => prod.id === tipData.id)) {
-        tipsPickerThree.push(newTip)
-      }
     })
     setTipsOne(tipsPickerOne);
-    setTipsTwo(tipsPickerTwo);
-    setTipsThree(tipsPickerThree);
     setLoading(false);
   }, [tips])
 
@@ -154,6 +123,51 @@ const Exam: React.FC = (props: any) => {
     }
   }, [item])
 
+  const handleSubmit = useCallback((data, { reset }) => {
+    if (!data.description) {
+      Alert.alert('Erro', 'Insira o diagnóstico')
+      return;
+    }
+    if (!level) {
+      Alert.alert('Erro', 'Insira o nível de halitose')
+      return;
+    }
+    if (!tipOne) {
+      Alert.alert('Erro', 'Insira pelo menos uma dica')
+      return;
+    }
+    if (!productOne) {
+      Alert.alert('Erro', 'Insira pelo menos um produto')
+      return;
+    }
+    try {
+      const date = format(new Date(), 'dd/MM/yyyy');
+      database()
+        .ref(`exams`)
+        .child(item.id)
+        .update({ 
+          active: false,
+          result: true,
+          dateResult: date,
+          diagnostic: data.description,
+          level,
+          tip: tipOne,
+          product: productOne,
+        })
+        .then(function () {
+          Alert.alert('Exame concluído', 'Diagnóstico enviado com sucesso ao paciente!')
+        });
+    } catch (err) {
+      console.log(err)
+      setLoading(false);
+    }
+  }, [
+    item, 
+    level,
+    tipOne,
+    productOne,
+  ])
+
   return loading ? (
     <Container style={{ flex: 1 }}>
       <ActivityIndicator size="large" color="#fff" />
@@ -166,51 +180,33 @@ const Exam: React.FC = (props: any) => {
           <ImageStyled source={{
             uri: image
           }} />
-          <Form ref={formRef} onSubmit={() => {}}>
-              <Picker 
-                data={DATA} 
-                icon="list"
-                setValue={setLevel}
-                value={level} />
-              <Input
-                autoCorrect={false}
-                autoCapitalize="none"
-                name="description"
-                icon="edit"
-                multiline={true}
-                placeholder="Descrição do diagnóstico"
-              />
+          <Form ref={formRef} onSubmit={handleSubmit}>
+            <Picker 
+              data={DATA} 
+              icon="list"
+              setValue={setLevel}
+              value={level} />
+            <Input
+              autoCorrect={false}
+              autoCapitalize="none"
+              name="description"
+              icon="edit"
+              multiline={true}
+              placeholder="Descrição do diagnóstico"
+            />
             <Picker 
               data={tipsOne} 
               icon="list"
               setValue={setTipOne}
               value={tipOne} />
             <Picker 
-              data={tipsTwo} 
-              icon="list"
-              setValue={setTipTwo}
-              value={tipTwo} />
-            <Picker 
-              data={tipsThree} 
-              icon="list"
-              setValue={setTipThree}
-              value={tipThree} />
-            <Picker 
               data={productsOne} 
               icon="list"
               setValue={setProductOne}
               value={productOne} />
-            <Picker 
-              data={productsTwo} 
-              icon="list"
-              setValue={setProductTwo}
-              value={productTwo} />
-            <Picker 
-              data={productsThree} 
-              icon="list"
-              setValue={setProductThree}
-              value={productThree} />
-            <Button onPress={() => {formRef.current?.submitForm();}}>Entrar</Button>
+            <Button onPress={() => {formRef.current?.submitForm();}}>
+              Enviar diagnóstico
+            </Button>
           </Form>
         </Content>
       </ScrollView>

@@ -74,10 +74,18 @@ const Tips: React.FC = (props: any) => {
             <Input
               autoCorrect={false}
               autoCapitalize="none"
-              name="description"
+              name="description_small"
               icon="edit"
               multiline={false}
-              placeholder="Descrição da dica"
+              placeholder="Descrição breve da dica"
+            />
+            <Input
+              autoCorrect={false}
+              autoCapitalize="none"
+              name="description"
+              icon="edit"
+              multiline={true}
+              placeholder="Descrição completa da dica"
             />
             <Input
               autoCorrect={false}
