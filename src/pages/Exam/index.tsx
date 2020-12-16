@@ -17,8 +17,10 @@ import Header from '../../componentes/Header';
 import Input from '../../componentes/Input';
 import Picker from '../../componentes/Picker';
 import Button from '../../componentes/Button';
+import { useAuth } from '../../hooks/auth';
 
 const Exam: React.FC = (props: any) => {
+  const { user } = useAuth();
   const { item } = props.route.params;
   const formRef = useRef<FormHandles>(null);
 
@@ -153,6 +155,7 @@ const Exam: React.FC = (props: any) => {
           level,
           tip: tipOne,
           product: productOne,
+          medic: user.uid
         })
         .then(function () {
           Alert.alert('Exame concluído', 'Diagnóstico enviado com sucesso ao paciente!')
@@ -166,6 +169,7 @@ const Exam: React.FC = (props: any) => {
     level,
     tipOne,
     productOne,
+    user
   ])
 
   return loading ? (

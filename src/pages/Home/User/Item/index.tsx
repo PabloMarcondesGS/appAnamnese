@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator } from 'react-native';
 import database from '@react-native-firebase/database';
-import { format } from 'date-fns';
 import { useNavigation } from '@react-navigation/native'
 
 import { 
@@ -14,23 +13,23 @@ import {
 const Item: React.FC = ({ item }: any) => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
-  const [user, setUser] = useState();
+  const [medic, setMedic] = useState();
 
   useEffect(() => {
     setLoading(true);
     database()
-      .ref(`users/${item.user}`)
+      .ref(`users/${item.medic}`)
       .once('value')
       .then(snapshot => {
         if (snapshot) {
-          setUser(snapshot.val())
+          setMedic(snapshot.val())
         }
         setLoading(false);
       });
     setLoading(false);
   }, [item])
 
-  return loading || !user ? (
+  return loading || !medic ? (
     <CardStyled style={{ flex: 1 }}>
       <ActivityIndicator size="large" color="#fff" />
     </CardStyled>
@@ -39,12 +38,12 @@ const Item: React.FC = ({ item }: any) => {
       <ParagraphStyled>
         Médico:
       </ParagraphStyled>
-      <TitleStyled>{user.name}</TitleStyled>
+      <TitleStyled>{medic && medic.name ? medic.name : ''}</TitleStyled>
       <ParagraphStyled>
         Data do resultado:
       </ParagraphStyled>
       <TitleStyled>
-        {format(item.date, 'dd/MM/yyyy')}
+        {item.dateResult}
       </TitleStyled>
       <ButtonStyled 
         onPress={() => navigation.navigate('ExamResult', { item })}
