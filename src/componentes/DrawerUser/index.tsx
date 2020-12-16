@@ -25,8 +25,6 @@ const DrawerUser: React.FC  = () => {
           activeBackgroundColor: "#fff",
           inactiveTintColor: "#fff"
         }}>
-
-          
         <Drawer.Screen 
             name="App" 
             component={HomeUser} 
@@ -46,8 +44,7 @@ const DrawerUser: React.FC  = () => {
               drawerIcon: (({focused}) => <Icon color={focused ? '#313131' : '#fff' } name="list" />)
             }
           }
-        
-          />
+        />
         <Drawer.Screen 
           name="UploadPicture" 
           component={UploadPicture} 
@@ -57,19 +54,17 @@ const DrawerUser: React.FC  = () => {
               drawerIcon: (({focused}) => <Icon color={focused ? '#313131' : '#fff' } name="camera" />)
             }
           }
-        
-          />
-          <Drawer.Screen 
-            name="Profile" 
-            component={Profile} 
-            options={
-              {
-                drawerLabel: (({focused}) => <Text style={{color: focused ? '#313131' : '#fff' }}>Meu perfil</Text>),
-                drawerIcon: (({focused}) => <Icon color={focused ? '#313131' : '#fff' } name="user" />)
-              }
+        />
+        <Drawer.Screen 
+          name="Profile" 
+          component={Profile} 
+          options={
+            {
+              drawerLabel: (({focused}) => <Text style={{color: focused ? '#313131' : '#fff' }}>Meu perfil</Text>),
+              drawerIcon: (({focused}) => <Icon color={focused ? '#313131' : '#fff' } name="user" />)
             }
-          
-            />
+          }
+        />
       </Drawer.Navigator>
   )
 }

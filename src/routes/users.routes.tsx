@@ -10,6 +10,7 @@ import Tips from '../pages/Tips';
 import TipsList from '../pages/TipsList';
 import Product from '../pages/Product';
 import ProductList from '../pages/ProductList';
+import Users from '../pages/Users';
 import WebView from '../pages/WebView';
 
 const App = createStackNavigator();
@@ -31,6 +32,7 @@ const AppRoutes: React.FC = () => (
         <App.Screen name="Product" component={Product} />
         <App.Screen name="ProductList" component={ProductList} />
         <App.Screen name="WebView" component={WebView} />
+        <App.Screen name="Users" component={Users} />
     </App.Navigator>
 );
 

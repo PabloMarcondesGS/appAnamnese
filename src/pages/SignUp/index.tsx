@@ -47,6 +47,8 @@ const SignUp: React.FC = () => {
     const navigation = useNavigation();
     const [male, setMale] = useState(true);
     const [female, setFemale] = useState(false);
+    const [pacient, setPacient] = useState(true);
+    const [medic, setMedic] = useState(false);
 
     const emailInputRef = useRef<TextInput>(null);
     const passwordInputRef = useRef<TextInput>(null);
@@ -71,8 +73,10 @@ const SignUp: React.FC = () => {
                         email: data.email,
                         sex: male ? 'Masculino' : 'Feminino',
                         birthDate: date,
-                        id: user.user.uid
-                    });
+                        id: user.user.uid,
+                        medic: medic ? true : false,
+                        active: false
+                    })
                 })
                 .catch (function (error) {
                     if (error.code === 'auth/email-already-in-use') {
@@ -102,9 +106,9 @@ const SignUp: React.FC = () => {
                 'Erro no cadastro',
                 'Ocorreu um erro ao fazer cadastro, tente novamente'
             );
-            setLoading(false);
+            // setLoading(false);
         }
-    }, [navigation, male, date]);
+    }, [navigation, male, date, medic]);
 
     const onChange = (event: any, selectedDate: any) => {
     const currentDate = selectedDate || date;
@@ -129,6 +133,38 @@ const SignUp: React.FC = () => {
                         </View>
                         <Form ref={formRef} onSubmit={handleSignUp}>
 
+                            <View style={{ 
+                                backgroundColor: 'white', 
+                                width: '100%',
+                                paddingLeft: 14,
+                                paddingRight: 14,
+                                paddingTop: 10,
+                                paddingBottom: 10,
+                                borderRadius: 8,
+                                marginBottom: 10,
+                                borderWidth: 2,
+                                borderColor: '#808080'
+                            }}>
+                                <Text>Tipo:</Text>
+                                <View style={{ display: 'flex', alignItems: 'center', flexDirection: 'row' }}>
+                                    <Checkbox
+                                        status={medic ? 'checked' : 'unchecked'}
+                                        onPress={() => {
+                                            setMedic(!medic);
+                                            setPacient(medic ? true : false);
+                                        }} />
+                                    <Text>Médico</Text>
+                                </View>
+                                <View style={{ display: 'flex', alignItems: 'center', flexDirection: 'row' }}>
+                                    <Checkbox
+                                        status={pacient ? 'checked' : 'unchecked'}
+                                        onPress={() => {
+                                            setPacient(!pacient);
+                                            setMedic(pacient ? true : false);
+                                        }} />
+                                    <Text>Paciente</Text>
+                                </View>
+                            </View>
                             <Input
                                 autoCapitalize="words"
                                 name="name"

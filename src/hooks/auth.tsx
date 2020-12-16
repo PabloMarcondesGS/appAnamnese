@@ -59,18 +59,23 @@ const AuthProvider: React.FC = ({ children }) => {
                     .once('value')
                     .then(async (snapshot) => {
                         if (snapshot) {
-                            if (snapshot.val().medic) {
-                                await AsyncStorage.multiSet([
-                                    ['@GoBarber:user', JSON.stringify(user.user)],
-                                    ['@GoBarber:medic', JSON.stringify(true)]
-                                ])
-                                setData({ user: user.user, medic: true });
+                            if (snapshot.val().active) {
+                                if (snapshot.val().medic) {
+                                    await AsyncStorage.multiSet([
+                                        ['@GoBarber:user', JSON.stringify(user.user)],
+                                        ['@GoBarber:medic', JSON.stringify(true)]
+                                    ])
+                                    setData({ user: user.user, medic: true });
+                                } else {
+                                    await AsyncStorage.multiSet([
+                                        ['@GoBarber:user', JSON.stringify(user.user)],
+                                        ['@GoBarber:medic', JSON.stringify(false)]
+                                    ])
+                                    setData({ user: user.user, medic: false });
+                                }
+
                             } else {
-                                await AsyncStorage.multiSet([
-                                    ['@GoBarber:user', JSON.stringify(user.user)],
-                                    ['@GoBarber:medic', JSON.stringify(false)]
-                                ])
-                                setData({ user: user.user, medic: false });
+                                Alert.alert('Erro no acesso', 'Aguarde a liberação ao app.')
                             }
                         }
                     setLoading(false);

@@ -59,7 +59,6 @@ const Questions: React.FC = (props: any) => {
       .ref(`questions/user/${user.uid}`)
       .once('value')
       .then(snapshot => {
-        console.log(snapshot)
         if (snapshot.val()) {
           setIsAnsered(true);
         }

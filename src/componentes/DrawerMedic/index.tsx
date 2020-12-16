@@ -10,6 +10,7 @@ import Tips from '../../pages/Tips'
 import TipsList from '../../pages/TipsList'
 import Product from '../../pages/Product'
 import ProductList from '../../pages/ProductList'
+import Users from '../../pages/Users'
 
 const DrawerMedic: React.FC  = () => {
   const Drawer = createDrawerNavigator();
@@ -80,6 +81,16 @@ const DrawerMedic: React.FC  = () => {
           options={
             {
               drawerLabel: (({focused}) => <Text style={{color: focused ? '#313131' : '#fff' }}>Listar produtos</Text>),
+              drawerIcon: (({focused}) => <Icon color={focused ? '#313131' : '#fff' } name="list" />)
+            }
+          }
+        />
+        <Drawer.Screen 
+          name="Users" 
+          component={Users} 
+          options={
+            {
+              drawerLabel: (({focused}) => <Text style={{color: focused ? '#313131' : '#fff' }}>Listar usuários</Text>),
               drawerIcon: (({focused}) => <Icon color={focused ? '#313131' : '#fff' } name="list" />)
             }
           }
