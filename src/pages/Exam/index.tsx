@@ -2,11 +2,11 @@ import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { ActivityIndicator, Alert, ScrollView } from 'react-native';
 import storage from '@react-native-firebase/storage';
 import database from '@react-native-firebase/database';
-import * as Yup from 'yup';
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
 import { map } from 'lodash';
 import { format } from 'date-fns';
+import { useNavigation } from '@react-navigation/native'
 
 import { 
   Container,
@@ -23,6 +23,7 @@ const Exam: React.FC = (props: any) => {
   const { user } = useAuth();
   const { item } = props.route.params;
   const formRef = useRef<FormHandles>(null);
+  const navigation = useNavigation();
 
   const [loading, setLoading] = useState(true);
   const [image, setImage] = useState('');
@@ -158,7 +159,8 @@ const Exam: React.FC = (props: any) => {
           medic: user.uid
         })
         .then(function () {
-          Alert.alert('Exame concluído', 'Diagnóstico enviado com sucesso ao paciente!')
+          Alert.alert('Exame concluído', 'Diagnóstico enviado com sucesso ao paciente!');
+          navigation.goBack()
         });
     } catch (err) {
       console.log(err)
