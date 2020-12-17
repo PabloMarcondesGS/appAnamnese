@@ -8,6 +8,35 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:618945172885:android:257c38faaadaa05fb5129c",
+        "android_client_info": {
+          "package_name": "com.appanamnese"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "618945172885-l4aehnmcan79chbdec4qugnjmubhh77t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDgPrtjGG5deX9ofrXnBVm275en-8Of5dc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "618945172885-l4aehnmcan79chbdec4qugnjmubhh77t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:618945172885:android:14f33731036db00cb5129c",
         "android_client_info": {
           "package_name": "com.appgobarber"

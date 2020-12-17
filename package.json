@@ -1,5 +1,5 @@
 {
-  "name": "appgobarber",
+  "name": "appanamnese",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -64,15 +64,15 @@
     "react-test-renderer": "16.13.1",
     "typescript": "^3.8.3"
   },
-  "jest": {
-    "preset": "react-native",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "jsx",
-      "json",
-      "node"
-    ]
-  }
+    "jest": {
+      "preset": "react-native",
+      "moduleFileExtensions": [
+        "ts",
+        "tsx",
+        "js",
+        "jsx",
+        "json",
+        "node"
+      ]
+    }
 }

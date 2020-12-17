@@ -1,4 +1,4 @@
-package com.appgobarber;
+package com.appanamnese;
 
 import com.facebook.react.ReactActivity;
 
