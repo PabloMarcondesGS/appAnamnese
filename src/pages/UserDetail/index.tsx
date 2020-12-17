@@ -77,7 +77,7 @@ const UserDetail: React.FC = (props: any) => {
             )}
             <Title>Nome: {item.name}</Title>
             <Title>Ativa: {item.active ? 'Sim' : 'Não'}</Title>
-            <Description>Tipo: {item.medic ? 'Médico(a)' : 'Paciente'}</Description>
+            <Description>Tipo: {item.medic ? 'Especialista' : 'Paciente'}</Description>
             <Description>Email: {item.email}</Description>
             <Description>Sexo: {item.sex}</Description>
           </CardStyled>

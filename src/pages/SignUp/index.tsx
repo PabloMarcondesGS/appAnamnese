@@ -153,7 +153,7 @@ const SignUp: React.FC = () => {
                                             setMedic(!medic);
                                             setPacient(medic ? true : false);
                                         }} />
-                                    <Text>Médico</Text>
+                                    <Text>CYB Diagnóstico</Text>
                                 </View>
                                 <View style={{ display: 'flex', alignItems: 'center', flexDirection: 'row' }}>
                                     <Checkbox

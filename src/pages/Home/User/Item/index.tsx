@@ -36,7 +36,7 @@ const Item: React.FC = ({ item }: any) => {
   ) : (
     <CardStyled>
       <ParagraphStyled>
-        Médico:
+        Especialista:
       </ParagraphStyled>
       <TitleStyled>{medic && medic.name ? medic.name : ''}</TitleStyled>
       <ParagraphStyled>

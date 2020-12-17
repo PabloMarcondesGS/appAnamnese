@@ -45,7 +45,7 @@ const Item: React.FC = ({ item }: any) => {
   ) : (
     <CardStyled>
       <ParagraphStyled>
-        {item.medic ? 'MÉDICO' : 'PACIENTE'}
+        {item.medic ? 'ESPECIALISTA' : 'PACIENTE'}
       </ParagraphStyled>
       <View style={{
         flexDirection: 'row',
