@@ -24,8 +24,6 @@ const Item: React.FC = ({ item }: any) => {
       setActive(false)
   }, [item])
 
-  console.log(item.id)
-
   const handleUpdateUser = useCallback(() => {
     database().ref(`users`)
     .child(item.id)
@@ -95,7 +93,7 @@ const Item: React.FC = ({ item }: any) => {
           </View>
       </View>
       <ButtonStyled 
-        onPress={() => navigation.navigate('ExamResult', { item })}
+        onPress={() => navigation.navigate('UserDetail', { item })}
         mode="contained">
         Ver Detalhes
       </ButtonStyled>

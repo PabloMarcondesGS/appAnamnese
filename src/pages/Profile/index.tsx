@@ -126,8 +126,9 @@ const Profile: React.FC = (props: any) => {
             setLoading(false);
             return;
           }
-          const source = { uri: response.uri };
-          const filename = source.uri.substring(source.uri.lastIndexOf('/') + 1);
+          const filename = response.uri.substring(response.uri.lastIndexOf('/') + 1);
+          const uriD = await getPathForFirebaseStorage(response.uri)
+          const source = { uri: uriD };
           const uploadUri = Platform.OS === 'ios' ? source.uri.replace('file://', '') : source.uri;
           setImageUser(uploadUri)
           try {
@@ -135,7 +136,13 @@ const Profile: React.FC = (props: any) => {
               .ref(`images/users`)
               .child(`${filename}----${user.uid}----`)
               .putFile(uploadUri);
-            await task;
+            const resp = await task;
+            database()
+                .ref(`users`)
+                .child(user.uid)
+                .update({
+                    image: resp.metadata.fullPath
+                })
           } catch (e) {
             setLoading(false);
             console.error(e);
@@ -148,7 +155,7 @@ const Profile: React.FC = (props: any) => {
           );
           setLoading(false);
         });
-      }, [user]);
+      }, [user, getPathForFirebaseStorage]);
 
     useEffect(() => {
         setLoading(true);

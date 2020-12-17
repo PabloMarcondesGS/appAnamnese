@@ -7,6 +7,7 @@ import { Alert } from 'react-native';
 interface AuthState {
     user: any;
     medic: boolean;
+    admin: boolean;
 }
 
 interface SignInCredentials {
@@ -17,6 +18,7 @@ interface SignInCredentials {
 interface AuthContextData {
     user:  any;
     medic: boolean;
+    admin: boolean;
     loading: boolean;
     signIn(credencials: SignInCredentials): Promise<void>;
     signOut(): void;
@@ -31,15 +33,17 @@ const AuthProvider: React.FC = ({ children }) => {
     useEffect(() => {
 
         async function loadStoragedData(): Promise<void>{
-            const [user, medic] = await AsyncStorage.multiGet([
+            const [user, medic, admin] = await AsyncStorage.multiGet([
                 '@GoBarber:user',
-                '@GoBarber:medic'
+                '@GoBarber:medic',
+                '@GoBarber:admin'
             ]);
 
-            if (user[1] && medic[1]) {
+            if (user[1] && medic[1] && admin[1]) {
                 setData({ 
                     user: JSON.parse(user[1]), 
-                    medic: JSON.parse(medic[1]) 
+                    medic: JSON.parse(medic[1]) , 
+                    admin: JSON.parse(admin[1]) 
                 })
             }
 
@@ -59,23 +63,34 @@ const AuthProvider: React.FC = ({ children }) => {
                     .once('value')
                     .then(async (snapshot) => {
                         if (snapshot) {
-                            if (snapshot.val().active) {
-                                if (snapshot.val().medic) {
-                                    await AsyncStorage.multiSet([
-                                        ['@GoBarber:user', JSON.stringify(user.user)],
-                                        ['@GoBarber:medic', JSON.stringify(true)]
-                                    ])
-                                    setData({ user: user.user, medic: true });
-                                } else {
-                                    await AsyncStorage.multiSet([
-                                        ['@GoBarber:user', JSON.stringify(user.user)],
-                                        ['@GoBarber:medic', JSON.stringify(false)]
-                                    ])
-                                    setData({ user: user.user, medic: false });
-                                }
-
+                            if (snapshot.val().admin) {
+                                await AsyncStorage.multiSet([
+                                    ['@GoBarber:user', JSON.stringify(user.user)],
+                                    ['@GoBarber:medic', JSON.stringify(true)],
+                                    ['@GoBarber:admin', JSON.stringify(true)]
+                                ])
+                                setData({ user: user.user, medic: true, admin: true });
                             } else {
-                                Alert.alert('Erro no acesso', 'Aguarde a liberação ao app.')
+                                if (snapshot.val().active) {
+                                    if (snapshot.val().medic) {
+                                        await AsyncStorage.multiSet([
+                                            ['@GoBarber:user', JSON.stringify(user.user)],
+                                            ['@GoBarber:medic', JSON.stringify(true)],
+                                            ['@GoBarber:admin', JSON.stringify(false)]
+                                        ])
+                                        setData({ user: user.user, medic: true, admin: false });
+                                    } else {
+                                        await AsyncStorage.multiSet([
+                                            ['@GoBarber:user', JSON.stringify(user.user)],
+                                            ['@GoBarber:medic', JSON.stringify(false)],
+                                            ['@GoBarber:admin', JSON.stringify(false)]
+                                        ])
+                                        setData({ user: user.user, medic: false, admin: false });
+                                    }
+    
+                                } else {
+                                    Alert.alert('Erro no acesso', 'Aguarde a liberação ao app.')
+                                }
                             }
                         }
                     setLoading(false);
@@ -96,7 +111,14 @@ const AuthProvider: React.FC = ({ children }) => {
     }, []);
 
     return (
-        <AuthContext.Provider value={{ user: data.user, medic: data.medic, loading, signIn, signOut }} >
+        <AuthContext.Provider value={{ 
+            user: data.user, 
+            medic: data.medic, 
+            admin: data.admin, 
+            loading, 
+            signIn, 
+            signOut 
+        }} >
             {children}
         </ AuthContext.Provider>
     );

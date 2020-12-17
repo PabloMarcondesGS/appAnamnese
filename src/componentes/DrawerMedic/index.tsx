@@ -12,10 +12,17 @@ import Product from '../../pages/Product'
 import ProductList from '../../pages/ProductList'
 import Users from '../../pages/Users'
 
+
+import { useAuth } from '../../hooks/auth';
+
 const DrawerMedic: React.FC  = () => {
+  const { admin } = useAuth();
+
   const Drawer = createDrawerNavigator();
-  return (
-    <Drawer.Navigator 
+
+  if (admin) {
+    return (
+      <Drawer.Navigator 
         initialRouteName="App"
         drawerStyle={{
           backgroundColor: "#313131",
@@ -96,7 +103,63 @@ const DrawerMedic: React.FC  = () => {
           }
         />
       </Drawer.Navigator>
-  )
+    )
+  } else {
+    return (
+      <Drawer.Navigator 
+        initialRouteName="App"
+        drawerStyle={{
+          backgroundColor: "#313131",
+          paddingVertical: 20
+        }}
+        drawerContentOptions={{
+          activeBackgroundColor: "#fff",
+          inactiveTintColor: "#fff"
+        }}>
+        <Drawer.Screen 
+          name="App" 
+          component={HomeMedic} 
+          options={
+            {
+              drawerLabel: (({focused}) => <Text style={{color: focused ? '#313131' : '#fff' }}>Home</Text>),
+              drawerIcon: (({focused}) => <Icon color={focused ? '#313131' : '#fff' } name="home" />)
+            }
+          } 
+        />
+        <Drawer.Screen 
+          name="Profile" 
+          component={Profile} 
+          options={
+            {
+              drawerLabel: (({focused}) => <Text style={{color: focused ? '#313131' : '#fff' }}>Meu perfil</Text>),
+              drawerIcon: (({focused}) => <Icon color={focused ? '#313131' : '#fff' } name="user" />)
+            }
+          }
+        />
+        <Drawer.Screen 
+          name="TipsList" 
+          component={TipsList} 
+          options={
+            {
+              drawerLabel: (({focused}) => <Text style={{color: focused ? '#313131' : '#fff' }}>Listar dicas</Text>),
+              drawerIcon: (({focused}) => <Icon color={focused ? '#313131' : '#fff' } name="list" />)
+            }
+          }
+        />
+        <Drawer.Screen 
+          name="ProductList" 
+          component={ProductList} 
+          options={
+            {
+              drawerLabel: (({focused}) => <Text style={{color: focused ? '#313131' : '#fff' }}>Listar produtos</Text>),
+              drawerIcon: (({focused}) => <Icon color={focused ? '#313131' : '#fff' } name="list" />)
+            }
+          }
+        />
+      </Drawer.Navigator>
+    )
+  }
+  
 }
 
 export default DrawerMedic;
