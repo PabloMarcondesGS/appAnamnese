@@ -97,6 +97,7 @@ const AuthProvider: React.FC = ({ children }) => {
                 });
             })
             .catch(error => {
+                console.log(error)
                 setLoading(false);
                 Alert.alert('Erro', 'Cheque suas credênciais e tente novamente.')
             });
@@ -104,7 +105,9 @@ const AuthProvider: React.FC = ({ children }) => {
 
     const signOut = useCallback(async () => {
         await AsyncStorage.multiRemove([
-            '@GoBarber:user'
+            '@GoBarber:user',
+            '@GoBarber:medic', 
+            '@GoBarber:admin'
         ]);
 
         setData({} as AuthState);
