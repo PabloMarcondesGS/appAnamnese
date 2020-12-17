@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, RefreshControl } from 'react-native';
 import database from '@react-native-firebase/database';
 import { map } from 'lodash';
 import { View, Text } from 'react-native';
@@ -13,6 +13,7 @@ import Item from './Item';
 const User: React.FC = (props) => {
   const { user } = useAuth();
 
+  const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [exams, setUsers] = useState<any[]>([]);
 
@@ -31,6 +32,12 @@ const User: React.FC = (props) => {
     getData();
   }, [user]);
 
+  const handleRefresh = useCallback(() => {
+    setRefreshing(true);
+    getUsers();
+    setRefreshing(false);
+  }, [getUsers])
+
   useEffect(() => {
     getUsers();
   }, [getUsers])
@@ -44,15 +51,17 @@ const User: React.FC = (props) => {
       <Header toggleDrawer={props.navigation.toggleDrawer} />
       <Content>
       {exams && exams.length ? (
-        <FlatListStyled
-          data={exams && exams.length ? exams : []}
-          renderItem={({ item }) => (
-            <Item
-              item={item}
-            />
-          )}
-          keyExtractor={item => item.id}
-        />
+        <RefreshControl onRefresh={handleRefresh} style={{ flex: 1 }} refreshing={refreshing}>
+          <FlatListStyled
+            data={exams && exams.length ? exams : []}
+            renderItem={({ item }) => (
+              <Item
+                item={item}
+              />
+            )}
+            keyExtractor={item => item.id}
+          />
+        </RefreshControl>
       ) : (
         <Text style={{
           color: 'white',

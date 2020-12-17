@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, RefreshControl } from 'react-native';
 import database from '@react-native-firebase/database';
 import { map } from 'lodash';
 
@@ -45,9 +45,7 @@ const ProductList: React.FC = (props: any) => {
 
   const handleRefresh = useCallback(() => {
     setRefreshing(true);
-    setLoading(true);
     getData();
-    setLoading(false);
     setRefreshing(false);
   }, [getData])
 
@@ -59,15 +57,17 @@ const ProductList: React.FC = (props: any) => {
     <Container>
       <Header toggleDrawer={() => props.navigation.goBack()} isHeader={false} />
       <Content>
-        <FlatListStyled
-          data={products}
-          renderItem={({ item }: any) => (
-            <Item
-              item={item}
-            />
-          )}
-          keyExtractor={item => item.id}
-        />
+        <RefreshControl onRefresh={handleRefresh} style={{ flex: 1 }} refreshing={refreshing}>
+          <FlatListStyled
+            data={products}
+            renderItem={({ item }: any) => (
+              <Item
+                item={item}
+              />
+            )}
+            keyExtractor={item => item.id}
+          />
+        </RefreshControl>
       </Content>
     </Container>
   )

@@ -15,5 +15,6 @@ export const Content = styled.View`
 
 export const FlatListStyled = styled.FlatList`
   flex-basis: 0;
+  flex: 1;
 `
 

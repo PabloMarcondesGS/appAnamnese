@@ -39,15 +39,14 @@ const TipsList: React.FC = (props: any) => {
       })
   }, [])
 
+
   useEffect(() => {
     getData();
   }, [getData]);
 
   const handleRefresh = useCallback(() => {
     setRefreshing(true);
-    setLoading(true);
     getData();
-    setLoading(false);
     setRefreshing(false);
   }, [getData])
 
@@ -60,15 +59,17 @@ const TipsList: React.FC = (props: any) => {
       <Header toggleDrawer={() => props.navigation.goBack()} isHeader={false} />
       <Content>
         <View style={{ flex: 1, alignItems: 'center' }}>
-          <FlatListStyled
-            data={tips}
-            renderItem={({ item }: any) => (
-              <Item
-                item={item}
-              />
-            )}
-            keyExtractor={item => item.id}
-          />
+          <RefreshControl onRefresh={handleRefresh} style={{ flex: 1 }} refreshing={refreshing}>
+            <FlatListStyled
+              data={tips}
+              renderItem={({ item }: any) => (
+                <Item
+                  item={item}
+                />
+              )}
+              keyExtractor={item => item.id}
+            />
+          </RefreshControl>
         </View>
       </Content>
     </Container>

@@ -13,7 +13,7 @@ const Item = ({ item }: any) => {
           textAlign: 'left',
           paddingTop: 10
         }}>
-        DICA
+        PRODUTO
       </Paragraph>
       <Title>{item.description}</Title>
       <Paragraph
