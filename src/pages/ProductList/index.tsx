@@ -23,9 +23,9 @@ const ProductList: React.FC = (props: any) => {
     database()
       .ref(`products`)
       .once('value', snapshot => {
-        const studentiesData = map(snapshot.val(), x => x);
+        const productsData = map(snapshot.val(), x => x);
         const sortedData = 
-          studentiesData.sort(function (a, b) {
+          productsData.sort(function (a, b) {
             if (a.description > b.description) {
               return 1;
             }

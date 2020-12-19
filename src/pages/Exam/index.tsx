@@ -210,7 +210,10 @@ const Exam: React.FC = (props: any) => {
               icon="list"
               setValue={setProductOne}
               value={productOne} />
-            <Button onPress={() => {formRef.current?.submitForm();}}>
+            <Button onPress={() => navigation.navigate('QuestionsDetail', { id: item.user })}>
+              Detalhes do paciente
+            </Button>
+            <Button onPress={() => {formRef.current?.submitForm()}}>
               Enviar diagnóstico
             </Button>
           </Form>

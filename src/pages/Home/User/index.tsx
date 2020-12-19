@@ -27,7 +27,7 @@ const User: React.FC = (props) => {
           const examsData = map(snapshot.val(), x => x);
           let newExams: any[] = [];
           examsData.map(ex => {
-            if (ex.user === user.uid) {
+            if (ex.user === user.uid && !ex.active) {
               const day  = ex.date.split("/")[0];
               const month  = ex.date.split("/")[1];
               const year  = ex.date.split("/")[2];
@@ -39,7 +39,6 @@ const User: React.FC = (props) => {
               newExams.push(examData);
             }
           })
-          console.log(newExams)
           const sortedData = 
             newExams.sort(function (a, b) {
               if (a.date > b.date) {
