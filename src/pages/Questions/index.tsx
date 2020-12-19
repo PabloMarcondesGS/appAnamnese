@@ -66,8 +66,17 @@ const Questions: React.FC = (props: any) => {
       .ref(`questions`)
       .once('value', snapshot => {
         const questionsData = map(snapshot.val(), x => x);
-        if (questionsData.find(question => user.uid === question.user)) {
+        const question = questionsData.find(question => user.uid === question.user)
+        if (question) {
           setIsAnsered(true)
+          setIsAnsered(true)
+          setCheckedOneYes(question.questionOne)
+          setCheckedTwoYes(question.questionTwo)
+          setCheckedThreeYes(question.questionThree)
+          setCheckedFourYes(question.questionFour)
+          setCheckedFiveYes(question.questionFive)
+          setCheckedSixYes(question.questionSix)
+          setCheckedSevenYes(question.questionSeven)
         }
         setLoading(false);
       })
