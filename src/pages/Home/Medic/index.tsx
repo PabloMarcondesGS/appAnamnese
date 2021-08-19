@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { ActivityIndicator, RefreshControl } from 'react-native';
+import { ActivityIndicator, RefreshControl, Text } from 'react-native';
 import database from '@react-native-firebase/database';
 import { map } from 'lodash';
 
-import { Container, FlatListStyled, Content } from './styles';
+import { Container, FlatListStyled, Content, TextStyled } from './styles';
 import Item from './Item';
 import Header from '../../../componentes/Header';
 
@@ -62,24 +62,32 @@ const Home: React.FC = (props) => {
     }, [getExams])
 
     return loading ? (
-      <Container style={{ flex: 1 }}>
-        <ActivityIndicator size="large" color="#fff" />
+      <Container style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <ActivityIndicator size="large" color="#005a72" />
       </Container>
     ) : (
       <Container>
-        <Header toggleDrawer={props.navigation.toggleDrawer} />
+        <Header actionProfile={() => props.navigation.navigate('Profile')}  toggleDrawer={props.navigation.toggleDrawer} />
+        
         <Content>
-          <RefreshControl onRefresh={handleRefresh} style={{ flex: 1 }} refreshing={refreshing}>
-            <FlatListStyled
-              data={exams && exams.length ? exams : []}
-              renderItem={({ item }) => (
-                <Item
-                  item={item}
-                />
-              )}
-              keyExtractor={item => item.id}
-            />
-          </RefreshControl>
+          {exams.length === 0 ? (
+            <TextStyled style={{
+              color: 'white'
+              
+            }}>Sem exames para analise no momento</TextStyled>
+          ) : (
+            <RefreshControl onRefresh={handleRefresh} style={{ flex: 1 }} refreshing={refreshing}>
+              <FlatListStyled
+                data={exams && exams.length ? exams : []}
+                renderItem={({ item }) => (
+                  <Item
+                    item={item}
+                  />
+                )}
+                keyExtractor={item => item.id}
+              />
+            </RefreshControl>
+          )}
         </Content>
       </Container>
     );

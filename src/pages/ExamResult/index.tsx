@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { ActivityIndicator, ScrollView } from 'react-native';
+import { ActivityIndicator, ScrollView, View } from 'react-native';
 import storage from '@react-native-firebase/storage';
 import database from '@react-native-firebase/database';
 import { format } from 'date-fns';
@@ -19,9 +19,17 @@ import {
   SubTitleProductButton,
   ButtonProductMore,
   ButtonSeeAll,
-  ButtonSeeAllText
+  ButtonSeeAllText,
+  ViewRound,
+  Level,
+  Gradient, 
+  ViewText,
+  TitleTwo,
+  ViewTextTwo
 } from './styles';
+import { colors } from '../../styles'
 import Header from '../../componentes/Header';
+
 const ExamResult: React.FC = (props: any) => {
   const navigation = useNavigation();
   const { item } = props.route.params;
@@ -32,6 +40,7 @@ const ExamResult: React.FC = (props: any) => {
   const [level, setLevel] = useState('');
   const [product, setProduct] = useState<any[]>([]);
   const [tip, setTip] = useState();
+  const [halitosis, setHalitosis] = useState();
 
   const getData = useCallback(async () => {
     setLoading(true);
@@ -52,6 +61,15 @@ const ExamResult: React.FC = (props: any) => {
           setTip(snapshot.val())
         }
         setLoading(false);
+      })
+    database()
+      .ref(`halitosis/${item.halitosis}`)
+      .once('value')
+      .then(async (snapshot) => {
+        if (snapshot) {
+          setHalitosis(snapshot.val())
+        }
+        setLoading(false)
       })
   }, [item])
 
@@ -85,47 +103,78 @@ const ExamResult: React.FC = (props: any) => {
     }
   }, [product])
 
+  useEffect(() => {
+    if(halitosis && halitosis.description_small && halitosis.description_small.split(' ')) {
+      setLevel(halitosis.description_small.split(' ')[1])
+    }
+  }, [halitosis])
+
+  console.log(product)
+
   return loading ? (
     <Container style={{ flex: 1 }}>
       <ActivityIndicator size="large" color="#fff" />
     </Container>
   ) : (
     <Container>
-      <Header toggleDrawer={() => props.navigation.goBack()} isHeader={false} />
+      <Header actionProfile={() => props.navigation.navigate('Profile')}  toggleDrawer={() => props.navigation.goBack()} isHeader={false} />
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}>
         <Content>
-          <ImageStyled source={{
-            uri: image
-          }} />
           <Title>Resultado</Title>
-          <SubTitle>
-            {format(item.date, 'dd/MM/yyyy')} - Halitose {item.level}
-          </SubTitle>
-          <Description>{item.diagnostic}</Description>
-          <Title>Dica</Title>
-          <Description>{tip && tip.description ? tip.description : ''}</Description>
-          <Product>
-            <ImageStyledProduct source={{
-              uri: imageProduct
-            }} />
-            <TitleViewProduct>
-              <SubTitleProduct>
-                {product && product.description ? product.description : ''}
-              </SubTitleProduct>
-              <ButtonProductMore onPress={() => navigation.navigate('WebView', 
-                { url: product.link })}
-              >
-                <SubTitleProductButton>
-                  Mais detalhes
-                </SubTitleProductButton>
-              </ButtonProductMore>
-            </TitleViewProduct>
-          </Product>
-          <ButtonSeeAll>
-            <ButtonSeeAllText>
-              CONHECER TODOS OS PRODUTOS PARA RESOLVER A HÁLITOSE
-            </ButtonSeeAllText>
-          </ButtonSeeAll>
+          {/* <ImageStyled source={{
+            uri: image
+          }} /> */}
+          <ViewRound>
+            <Title>Nível</Title>
+            <Level>{level ? level : ''}</Level>
+          </ViewRound>
+          <Title>
+            {format(item.date, 'dd/MM/yyyy')} 
+          </Title>
+          <ViewText>
+            <Gradient
+              colors={[colors.primary,colors.secondary ]}
+              start={{x: 0, y: 1}}
+              end={{x: 1, y: 0}}>
+              <TitleTwo>DIAGNÓSTICO</TitleTwo>
+              <Description>{item.diagnostic}</Description>
+            </Gradient>
+          </ViewText>
+          {/* <Description>Halitose {halitosis && halitosis.description_small ? halitosis.description_small : ''}</Description>
+          <Description>Detalhes de halitose: {halitosis && halitosis.description ? halitosis.description : ''}</Description> */}
+          {/* <Description>{item.diagnostic}</Description> */}
+          {tip && tip.description ? (
+            <>
+              <Title>Dica</Title>
+              <Description>{tip && tip.description ? tip.description : ''}</Description>
+            </>
+          ) : <View />}
+          
+          {product && product.description ? (
+            <Product>
+              <ImageStyledProduct source={{
+                uri: imageProduct
+              }} />
+              <TitleViewProduct>
+                <ViewTextTwo>
+                  <Gradient
+                    colors={[colors.primary,colors.secondary ]}
+                    start={{x: 0, y: 1}}
+                    end={{x: 1, y: 0}}>
+                    <TitleTwo> {product && product.description ? product.description : ''}</TitleTwo>
+                    <Description>{product && product.info ? `${product.info.slice(0, 130)}...` : ''}</Description>
+                  </Gradient>
+                </ViewTextTwo>
+                <ButtonProductMore onPress={() => navigation.navigate('WebView', 
+                  { url: product.link })}
+                >
+                  <SubTitleProductButton>
+                     CONHEÇA MAIS PRODUTOS PARA RESOLVER A HÁLITOSE
+                  </SubTitleProductButton>
+                </ButtonProductMore>
+              </TitleViewProduct>
+            </Product>
+          ) : <View/>}
         </Content>
       </ScrollView>
     </Container>

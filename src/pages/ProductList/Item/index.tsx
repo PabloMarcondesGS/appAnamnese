@@ -1,12 +1,19 @@
-import React from 'react'
-import { Title, Paragraph } from 'react-native-paper';
+import React, {useCallback, useState} from 'react'
+import { useNavigation } from '@react-navigation/native';
+import database from '@react-native-firebase/database';
 
-import { ViewStyledTwo } from './styles'
+import { ViewStyledTwo, EditButton, TitleBtn, EditButtonTwo, TitleBtnTwo, ParagraphStyled, TitleStyled } from './styles'
 
-const Item = ({ item }: any) => {
+const Item = ({ item, handleRefresh, setProductsSelected }: any) => {
+  const [selected, setSelected] = useState(false)
+  const handleDelete = useCallback(() => {
+    database().ref().child('products').child(item.id).remove();
+    handleRefresh()
+  }, [])
+  const navigation = useNavigation();
   return (
     <ViewStyledTwo>
-      <Paragraph
+      <ParagraphStyled
         style={{
           flexBasis: '100%',
           flexWrap: 'wrap',
@@ -14,9 +21,9 @@ const Item = ({ item }: any) => {
           paddingTop: 10
         }}>
         PRODUTO
-      </Paragraph>
-      <Title>{item.description}</Title>
-      <Paragraph
+      </ParagraphStyled>
+      <TitleStyled>{item.description}</TitleStyled>
+      <ParagraphStyled
         style={{
           flexBasis: '100%',
           flexWrap: 'wrap',
@@ -24,8 +31,24 @@ const Item = ({ item }: any) => {
           paddingTop: 10
         }}>
         LINK
-      </Paragraph>
-      <Paragraph>{item.link}</Paragraph>
+      </ParagraphStyled>
+      <ParagraphStyled>{item.link}</ParagraphStyled>
+      <EditButton onPress={() => navigation.navigate('ProductEdit', { item })}>
+        <TitleBtn>Editar</TitleBtn>
+      </EditButton>
+      <EditButton 
+        style={{ margin: 0 }}
+        onPress={() => {
+          setProductsSelected((state) => [...state, item])
+          setSelected(true)
+        }}
+        mode="contained">
+        <TitleBtn 
+        style={{ margin: 0 }} selected={selected}>Selecionar</TitleBtn>
+      </EditButton>
+      <EditButtonTwo onPress={() => handleDelete()}>
+        <TitleBtnTwo>Deletar</TitleBtnTwo>
+      </EditButtonTwo>
     </ViewStyledTwo>
   )
 }

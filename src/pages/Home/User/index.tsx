@@ -1,17 +1,33 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { ActivityIndicator, RefreshControl } from 'react-native';
+import { ActivityIndicator, Image,TouchableOpacity } from 'react-native';
 import database from '@react-native-firebase/database';
 import { map } from 'lodash';
 import { View, Text } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
+import { useNavigation } from '@react-navigation/native'
 
 import Header from '../../../componentes/Header';
 import { useAuth } from '../../../hooks/auth';
 
-import { Container, FlatListStyled, Content } from './styles';
+import { 
+  Container, 
+  Gradient, 
+  Content, 
+  Button, 
+  TextValues, 
+  TextStyled, 
+  TextStyledMargin,
+   Row, 
+   ViewSeeMore,} from './styles';
 import Item from './Item';
+import { fonts, colors } from '../../../styles'
+
+
+import logoImg from '../../../assets/cyb-logo-maior.png';
 
 const User: React.FC = (props) => {
   const { user } = useAuth();
+  const navigation = useNavigation();
 
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -54,6 +70,7 @@ const User: React.FC = (props) => {
         })
     }
     getData();
+    setLoading(false);
   }, [user]);
 
   useEffect(() => {
@@ -67,14 +84,48 @@ const User: React.FC = (props) => {
   }, [getExams])
 
   return loading ? (
-    <View style={{ flex: 1 }}>
-      <ActivityIndicator size="large" color="#fff" />
-    </View>
+    <Container style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <ActivityIndicator size="large" color={colors.primary} />
+    </Container>
   ) : (
     <Container>
-      <Header toggleDrawer={props.navigation.toggleDrawer} />
+      <Header actionProfile={() => navigation.navigate('Profile')} toggleDrawer={() => navigation.navigate('Settings')} />
       <Content>
-      {exams && exams.length ? (
+        <Image style={{ width: 80, height: 80 }}  source={logoImg}/>
+
+        <Button onPress={() => navigation.navigate('UploadPictureTwo')}>
+          <Gradient
+            colors={[colors.primary,colors.secondary ]}
+            start={{x: 0, y: 1}}
+            end={{x: 1, y: 0}}>
+            <TextValues>Fazer exame</TextValues>
+          </Gradient>
+        </Button>
+        <Button onPress={() => navigation.navigate('ExamsUser')}>
+          <Gradient
+            colors={[colors.primary,colors.secondary ]}
+            start={{x: 0, y: 1}}
+            end={{x: 1, y: 0}}>
+            <TextValues>Exames realizados</TextValues>
+          </Gradient>
+        </Button>
+        <ViewSeeMore>
+          <TouchableOpacity onPress={() => navigation.navigate('WebView', 
+            { url: 'https://testeseuhalito.com.br' })}
+            >
+            <TextStyled>SAIBA MAIS SOBRE CYB</TextStyled>
+          </TouchableOpacity> 
+        
+          <Row>
+            <TouchableOpacity onPress={() => navigation.navigate('Alerts')}>
+              <TextStyled>NOVIDADES</TextStyled>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('MessagesUser')}>
+              <TextStyledMargin>MENSAGENS</TextStyledMargin>
+            </TouchableOpacity>
+          </Row>
+        </ViewSeeMore>
+      {/* {exams && exams.length ? (
         <RefreshControl onRefresh={handleRefresh} style={{ flex: 1 }} refreshing={refreshing}>
           <FlatListStyled
             data={exams && exams.length ? exams : []}
@@ -92,7 +143,7 @@ const User: React.FC = (props) => {
           fontSize: 17,
           textAlign: 'center'
         }}>Sem exames com diagnostico</Text>
-      )}
+      )} */}
       </Content>
     </Container>
   );

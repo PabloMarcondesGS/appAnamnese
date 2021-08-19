@@ -1,4 +1,4 @@
-import styled from 'styled-components/native';
+import styled, {css} from 'styled-components/native';
 import { Card, Title, Paragraph, Button } from 'react-native-paper';
 
 export const CardStyled = styled(Card)`
@@ -15,4 +15,12 @@ export const ButtonStyled = styled(Button)`
   margin-top: 24px;
   background-color: #42b6d9;
   color: white;
+`;
+
+export const ViewStyled = styled.View`
+  width: 40px;
+  background: green;
+  ${props => props.height && css`
+    height: ${props.height}px;
+  `}
 `;

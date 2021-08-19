@@ -72,11 +72,13 @@ const Item: React.FC = ({ item }: any) => {
         }}>
           <Checkbox
             status={!active ? 'checked' : 'unchecked'}
+            uncheckedColor="#fff"
+            color="#005a72"
             onPress={() => {
               setActive(inactive ? true : false);
               handleUpdateUser()
             }} />
-          <Text>Inativo</Text>
+          <ParagraphStyled>Inativo</ParagraphStyled>
         </View>
           <View style={{ 
             display: 'flex', 
@@ -85,15 +87,18 @@ const Item: React.FC = ({ item }: any) => {
           }}>
             <Checkbox
               status={active ? 'checked' : 'unchecked'}
+              uncheckedColor="#fff"
+              color="#005a72"
               onPress={() => {
                 setActive(!active);
                 handleUpdateUser()
               }} />
-            <Text>Ativo</Text>
+            <ParagraphStyled>Ativo</ParagraphStyled>
           </View>
       </View>
       <ButtonStyled 
         onPress={() => navigation.navigate('UserDetail', { item })}
+        color="#005a72"
         mode="contained">
         Ver Detalhes
       </ButtonStyled>

@@ -1,20 +1,23 @@
 import styled from 'styled-components/native';
 import { Platform } from 'react-native';
 import { getBottomSpace } from 'react-native-iphone-x-helper';
+import { fonts, colors } from '../../styles'
 
 export const Container = styled.View`
     flex: 1;
     align-items: center;
     justify-content: center;
     margin-top: 30px;
-    padding: 0 30px ${Platform.OS == 'android' ? 150 : 40}px;
+    padding: 0 30px 30px;
 `;
 
 export const Title = styled.Text`
-    font-size: 20px;
-    color: #f4ede8;
-    font-family: 'RobotoSlab-Medium';
-    margin: 24px 0 24px
+    font-size: ${fonts.bigger};
+    color: ${colors.white};
+    font-family: ${fonts.fontFamilyRegular};
+    margin: 24px 0 24px;
+    text-align: center;
+    width: 100%;
 `;
 
 export const BackToSignIn = styled.TouchableOpacity`
@@ -32,9 +35,16 @@ export const BackToSignIn = styled.TouchableOpacity`
     flex-direction: row;
 `;
 
-export const BackToSignInText = styled.Text`
-    color: #ADD8E6;
-    font-size: 18px;
-    font-family: 'RobotoSlab-Regular';
-    margin-left: 16px;
+
+export const TextValues = styled.Text`
+  color: ${colors.white};
+  font-family: ${fonts.fontFamilyRegular};
+  font-size: ${fonts.regular};
 `;
+
+export const TextPlaceholder = styled.Text`
+  color: ${colors.white};
+  font-family: ${fonts.fontFamilyRegular};
+  font-size: ${fonts.small};
+`;
+

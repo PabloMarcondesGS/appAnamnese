@@ -1,22 +1,58 @@
 import styled from 'styled-components/native';
+import { fonts, colors } from '../../styles'
 
 import { StyleSheet } from 'react-native';
 
-export const Container = styled.ScrollView`
+export const Container = styled.View`
   flex: 1;
-  background: #42b6d9;
-  padding: 40px 40px 80px 40px;
-  height: 100%;
+  align-items: center;
+  justify-content: center;
+  padding: 0 30px 30px;
+  background-color: ${colors.secondary};
 `;
 
+export const Title = styled.Text`
+    font-size: ${fonts.bigger};
+    color: ${colors.white};
+    font-family: ${fonts.fontFamilyRegular};
+    margin: 24px 0 24px;
+    text-align: center;
+`;
+
+export const CardStyled = styled.View`
+  background-color: ${colors.secondary};
+  padding: 18px;
+  border-bottom-width: 2px;
+  border-bottom-color: ${colors.primary};
+  margin-bottom: 16px;
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
+export const ViewOption = styled.View`
+  align-items: center;
+  flex-direction: row;
+`;
+
+
 export const TextStyled = styled.Text`
-  font-size: 15px;
-  color: white;
+font-size: ${fonts.small};
+color: ${colors.white};
+max-width: 60%;
+font-family: ${fonts.fontFamilyRegular};
 `
 
+export const TextStyledOption = styled.Text`
+font-size: ${fonts.small};
+color: ${colors.white};
+font-family: ${fonts.fontFamilyRegular};
+`;
+
 export const TitleStyled = styled.Text`
-  font-size: 17px;
-  color: white;
+  font-size: ${fonts.regular};
+  color: ${colors.white};
+  font-family: ${fonts.fontFamilyRegular};
   text-align: center;
   font-weight: bold;
   padding-bottom: 24px;
@@ -24,7 +60,7 @@ export const TitleStyled = styled.Text`
 
 export const ViewContainer = styled.View`
   flex: 1;
-  padding-bottom: 60px;
+  background-color: ${colors.secondary};
 `;
 
 export const styles = StyleSheet.create({

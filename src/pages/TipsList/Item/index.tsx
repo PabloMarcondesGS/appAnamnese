@@ -1,16 +1,20 @@
-import React from 'react'
-import { Text } from 'react-native'
+import React, { useCallback, useState } from 'react'
+import database from '@react-native-firebase/database';
 import { useNavigation } from '@react-navigation/native';
-import { Title, Paragraph } from 'react-native-paper';
 
-import { ViewStyled, ViewStyledTwo } from './styles'
+import { ViewStyled, ViewStyledTwo, EditButton, TitleStyled, ButtonStyledTwo, TitleBtn, ParagraphStyled } from './styles'
 
-const Item = ({ item }: any) => {
+const Item = ({ item, handleRefresh, setTipsSelected }: any) => {
   const navigation = useNavigation();
+  const [selected, setSelected] = useState(false)
+  const handleDelete = useCallback(() => {
+    database().ref().child('tips').child(item.id).remove();
+    handleRefresh()
+  }, [])
   return (
     <ViewStyled>
       <ViewStyledTwo>
-        <Paragraph
+        <ParagraphStyled
           style={{
             flexBasis: '100%',
             flexWrap: 'wrap',
@@ -18,9 +22,19 @@ const Item = ({ item }: any) => {
             paddingTop: 10
           }}>
           DICA
-        </Paragraph>
-        <Title>{item.description}</Title>
-        <Paragraph
+        </ParagraphStyled>
+        <TitleStyled>{item.description_small}</TitleStyled>
+        <ParagraphStyled
+          style={{
+            flexBasis: '100%',
+            flexWrap: 'wrap',
+            textAlign: 'left',
+            paddingTop: 10
+          }}>
+          DESCRIÇÃO
+        </ParagraphStyled>
+        <TitleStyled>{item.description}</TitleStyled>
+        <ParagraphStyled
           style={{
             flexBasis: '100%',
             flexWrap: 'wrap',
@@ -28,8 +42,30 @@ const Item = ({ item }: any) => {
             paddingTop: 10
           }}>
           LINK
-        </Paragraph>
-        <Paragraph>{item.link}</Paragraph>
+        </ParagraphStyled>
+        <ParagraphStyled>{item.link}</ParagraphStyled>
+      <EditButton 
+        style={{ margin: 0 }}
+        onPress={() => navigation.navigate('Tips', { item })}
+        mode="contained">
+        <TitleBtn>Editar</TitleBtn>
+      </EditButton>
+      <EditButton 
+        style={{ margin: 0 }}
+        onPress={() => {
+          setTipsSelected((state) => [...state, item])
+          setSelected(true)
+        }}
+        mode="contained">
+        <TitleBtn 
+        style={{ margin: 0 }} selected={selected}>Selecionar</TitleBtn>
+      </EditButton>
+      <ButtonStyledTwo 
+      style={{ marginTop: 0 }}
+        onPress={() => handleDelete()}
+        mode="contained">
+        Deletar
+      </ButtonStyledTwo>
       </ViewStyledTwo>
     </ViewStyled>
   )

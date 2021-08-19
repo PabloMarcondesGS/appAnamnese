@@ -24,7 +24,7 @@ const User: React.FC = (props) => {
         .ref(`/users`)
         .once('value', snapshot => {
           const userData = map(snapshot.val(), x => x);
-          const usersD = userData.filter(u => u.id !== user.uid);
+          const usersD = userData.filter(u => u.id !== user.uid && !u.medic);
           setUsers(usersD);
           setLoading(false);
         })
@@ -43,12 +43,12 @@ const User: React.FC = (props) => {
   }, [getUsers])
 
   return loading ? (
-    <View style={{ flex: 1 }}>
-      <ActivityIndicator size="large" color="#fff" />
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <ActivityIndicator size="large" color="#005a72" />
     </View>
   ) : (
     <Container>
-      <Header toggleDrawer={props.navigation.toggleDrawer} />
+      <Header actionProfile={() => props.navigation.navigate('Profile')}  toggleDrawer={props.navigation.toggleDrawer} />
       <Content>
       {exams && exams.length ? (
         <RefreshControl onRefresh={handleRefresh} style={{ flex: 1 }} refreshing={refreshing}>

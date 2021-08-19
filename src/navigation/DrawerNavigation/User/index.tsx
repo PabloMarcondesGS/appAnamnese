@@ -25,8 +25,6 @@ const DrawerUser: React.FC  = () => {
           activeBackgroundColor: "#fff",
           inactiveTintColor: "#fff"
         }}>
-
-          
         <Drawer.Screen 
             name="App" 
             component={HomeUser} 

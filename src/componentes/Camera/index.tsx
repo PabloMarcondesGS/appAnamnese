@@ -1,14 +1,18 @@
-import React, { useState } from "react";
-import { Modal, Alert, View } from "react-native";
+import React, { useState, useCallback } from "react";
+import { Modal, Alert, View, ActivityIndicator } from "react-native";
 
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { RNCamera } from "react-native-camera";
+import { colors } from '../../styles';
 
 const Camera: React.FC = ({ isVisible, onChangePhoto, onCloseCamera }: any) => {
   const [camera, setCamera] = useState();
+  const [loading, setLoading] = useState(false);
 
-  const onTakePicture = async () => {
+  const onTakePicture = useCallback(async () => {
+    if(loading) return;
     try {
+      setLoading(true)
       if (camera) {
         const { uri } = await camera.takePictureAsync({
           quality: 0.5,
@@ -18,10 +22,13 @@ const Camera: React.FC = ({ isVisible, onChangePhoto, onCloseCamera }: any) => {
         });
         onChangePhoto(uri);
       }
+      setLoading(false)
+      onCloseCamera()
     } catch (error) {
       Alert.alert("Erro", "Houve um erro ao tirar a foto.");
+      setLoading(false)
     }
-  };
+  }, [loading, camera]);
 
   return (
     <Modal animationType="slide" transparent={false} visible={isVisible}>
@@ -40,30 +47,52 @@ const Camera: React.FC = ({ isVisible, onChangePhoto, onCloseCamera }: any) => {
         }}
         captureAudio={false}
       >
-        <Icon
-          name="photo-camera"
-          size={40}
-          color={"#fff"}
-          onPress={onTakePicture}
-          style={{ 
-            position: 'absolute',
-            alignSelf: "center",
-            bottom: 20
-          }}
-        />
+        {loading ? (
+          <ActivityIndicator size="large" style={{ 
+              position: 'absolute',
+              alignSelf: "center",
+              bottom: 20
+            }} color={'#0094a3'} />
+        ) : (
+          <Icon
+            name="photo-camera"
+            size={40}
+            color={colors.primary}
+            onPress={onTakePicture}
+            style={{ 
+              position: 'absolute',
+              alignSelf: "center",
+              bottom: 20
+            }}
+          />
+        )}
         <View style={{
-          width: 230,
-          height: 380,
+          width: 150,
+          height: 220,
           borderWidth: 2,
-          top: 180,
-          borderColor: 'white',
+          top: 220,
+          borderColor: colors.primary,
           position: 'absolute',
-          alignSelf: 'center'
+          alignSelf: 'center',
+          borderBottomLeftRadius: 100,
+          borderBottomRightRadius: 100,
+        }} />
+
+        <View style={{
+          width: 1,
+          height: 120,
+          borderWidth: 1,
+          top: 280,
+          borderColor: colors.primary,
+          position: 'absolute',
+          alignSelf: 'center',
+          borderBottomLeftRadius: 100,
+          borderBottomRightRadius: 100,
         }} />
         <Icon
           name="close"
           size={50}
-          color={"#fff"}
+          color={colors.primary}
           onPress={onCloseCamera}
           style={{ 
             position: 'absolute',

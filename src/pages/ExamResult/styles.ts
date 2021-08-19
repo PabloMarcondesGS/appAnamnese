@@ -1,13 +1,42 @@
 import styled from 'styled-components/native';
 import { Dimensions } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+import { fonts, colors } from '../../styles'
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 export const Container = styled.View`
   flex: 1;
-  background-color: #42b6d9;
+  background-color: #fff;
 `
+
+export const Gradient = styled(LinearGradient)`
+  padding: 24px;
+  border-radius: 20px;
+`;
+
+export const ViewText = styled.View`
+  flex: 1;
+  margin-top: 24px;
+  width: 100%;
+`
+
+export const ViewTextTwo = styled.View`
+  flex: 1;
+  width: 100%;
+`
+
+export const ViewRound = styled.View`
+  width: 150px;
+  height: 150px;
+  border-radius: 75px;
+  border-width: 5px;
+  border-color: ${colors.primary};
+  align-items: center;
+  justify-content: center;
+  margin-top: 12px;
+`;
 
 export const Content = styled.View`
   flex: 1;
@@ -23,10 +52,27 @@ export const ImageStyled = styled.Image`
 `
 
 export const Title = styled.Text`
-    font-size: 20px;
-    color: #fff;
-    font-family: 'RobotoSlab-Medium';
-    margin: 12px 0 12px;
+  color: ${colors.primary};
+  font-family: ${fonts.fontFamilyRegular};
+  font-size: ${fonts.regular};
+  margin: 12px 0 0px;
+`;
+
+export const TitleTwo = styled.Text`
+  color: ${colors.white};
+  font-family: ${fonts.fontFamilyRegular};
+  font-size: ${fonts.regular};
+  width: 100%;
+  border-bottom-color: ${colors.white};
+  border-bottom-width: 1px;
+  padding-bottom: 5px;
+  margin-bottom: 8px;
+`;
+
+export const Level = styled.Text`
+  color: ${colors.primary};
+  font-family: ${fonts.fontFamilyRegular};
+  font-size: 60px;
 `;
 
 export const SubTitle = styled.Text`
@@ -36,24 +82,28 @@ export const SubTitle = styled.Text`
 `;
 
 export const Description = styled.Text`
-    font-size: 17px;
-    color: #fff;
-    text-align: justify;
-    font-family: 'RobotoSlab-Medium';
+  color: ${colors.white};
+  font-family: ${fonts.fontFamilyRegular};
+  font-size: ${fonts.small};
 `;
 
 export const Product = styled.View`
-  flex-direction: row;
   margin-top: 24px;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
-  flex: 1;
+  /* flex: 1;
+  border-width: 1px;
+  border-color: grey; */
 `;
 
 export const ImageStyledProduct = styled.Image`
-  width: 200px;
-  height: 200px;
-  border-radius: 100px;
+  width: 150px;
+  height: 300px;
+  margin-right: 12px;
+  border-top-left-radius: 40px;
+  border-bottom-left-radius: 40px; 
+  border-top-right-radius: 40px; 
 `
 
 export const TitleViewProduct = styled.View`
@@ -66,21 +116,20 @@ export const ButtonProductMore = styled.TouchableOpacity`
 `;
 
 export const SubTitleProductButton = styled.Text`
-    font-size: 17px;
-    color: #fff;
-    font-family: 'RobotoSlab-Medium';
+    color: ${colors.primary};
+    font-family: ${fonts.fontFamilyRegular};
+    font-size: ${fonts.regular};
     text-decoration: underline;
     text-align: center;
-    margin: 12px;
+    margin: 5px 12px;
 `;
 
 export const SubTitleProduct = styled.Text`
-    font-size: 20px;
-    color: #fff;
-    font-family: 'RobotoSlab-Medium';
+    color: ${colors.primary};
+    font-family: ${fonts.fontFamilyRegular};
+    font-size: ${fonts.regular};
     text-align: center;
-    margin: 12px;
-    flex-wrap: wrap;
+    margin: 5px 12px;
 `;
 
 export const ButtonSeeAll = styled.TouchableOpacity`
@@ -92,9 +141,8 @@ export const ButtonSeeAll = styled.TouchableOpacity`
 `;
 
 export const ButtonSeeAllText = styled.Text`
-    font-size: 17px;
-    color: #42b6d9;
-    flex-wrap: wrap;
-    font-family: 'RobotoSlab-Medium';
-    text-align: center;
+  color: ${colors.primary};
+  font-family: ${fonts.fontFamilyRegular};
+  font-size: ${fonts.regular};
+  text-align: center;
 `;

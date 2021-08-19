@@ -36,13 +36,22 @@ const Exam: React.FC = (props: any) => {
   const [tipsOne, setTipsOne] = useState<any []>([]);
   const [tipOne, setTipOne] = useState('');
 
-  const DATA = [
-    {label: 'NÍVEL DE ALITOSE', value: ''},
-    {label: 'Nível 1', value: 'Nível 1'},
-    {label: 'Nível 2', value: 'Nível 2'},
-    {label: 'Nível 3', value: 'Nível 3'},
-    {label: 'Nível 4', value: 'Nível 4'},
-  ]
+  const [halitosis, setHalitosis] = useState([]);
+  const [halitosisOne, setHalitosisOne] = useState<any []>([]);
+  const [halitosi, setHalitosi] = useState('');
+  const [halitosiDescription, setHalitosiDescription] = useState('');
+
+  useEffect(() => {
+    if (halitosi) {
+      const val = halitosisOne.find(hal => hal.value === halitosi)
+      if (val) {
+        setHalitosiDescription(val.description)
+      }
+    } else {
+      setHalitosiDescription('')
+    }
+  }, [halitosisOne, halitosi])
+
 
   const getData = useCallback(async () => {
     setLoading(true);
@@ -80,6 +89,23 @@ const Exam: React.FC = (props: any) => {
         setTips(sortedData);
         setLoading(false);
       })
+    database()
+      .ref(`halitosis`)
+      .once('value', snapshot => {
+        const halitosisData = map(snapshot.val(), x => x);
+        const sortedData = 
+          halitosisData.sort(function (a, b) {
+            if (a.description_small > b.description_small) {
+              return 1;
+            }
+            if (a.description_small < b.description) {
+              return -1;
+            }
+            return 0;
+          });
+        setHalitosis(sortedData);
+        setLoading(false);
+      })
   }, [])
 
   useEffect(() => {
@@ -111,6 +137,24 @@ const Exam: React.FC = (props: any) => {
   }, [tips])
 
   useEffect(() => {
+    setLoading(true);
+    let halitosisPicker: any[] = [];
+    halitosisPicker.push({ label: 'SELECIONE UM N. DE HALITOSE', value: '' })
+    halitosis.map(halitosisData => {
+      const newProduct = { 
+        label: halitosisData.description_small, 
+        value: halitosisData.id,
+        description: halitosisData.description
+      }
+      if (!halitosisPicker.find(hal => hal.id === halitosisData.id)) {
+        halitosisPicker.push(newProduct)
+      }
+    })
+    setHalitosisOne(halitosisPicker);
+    setLoading(false);
+  }, [halitosis])
+
+  useEffect(() => {
     getData();
   }, [getData]);
 
@@ -127,20 +171,12 @@ const Exam: React.FC = (props: any) => {
   }, [item])
 
   const handleSubmit = useCallback((data, { reset }) => {
-    if (!data.description) {
+    if (!halitosiDescription) {
       Alert.alert('Erro', 'Insira o diagnóstico')
       return;
     }
-    if (!level) {
+    if (!halitosi) {
       Alert.alert('Erro', 'Insira o nível de halitose')
-      return;
-    }
-    if (!tipOne) {
-      Alert.alert('Erro', 'Insira pelo menos uma dica')
-      return;
-    }
-    if (!productOne) {
-      Alert.alert('Erro', 'Insira pelo menos um produto')
       return;
     }
     try {
@@ -152,8 +188,8 @@ const Exam: React.FC = (props: any) => {
           active: false,
           result: true,
           dateResult: date,
-          diagnostic: data.description,
-          level,
+          diagnostic: halitosiDescription,
+          halitosis: halitosi,
           tip: tipOne,
           product: productOne,
           medic: user.uid
@@ -163,7 +199,6 @@ const Exam: React.FC = (props: any) => {
           navigation.goBack()
         });
     } catch (err) {
-      console.log(err)
       setLoading(false);
     }
   }, [
@@ -171,7 +206,9 @@ const Exam: React.FC = (props: any) => {
     level,
     tipOne,
     productOne,
-    user
+    user,
+    halitosi,
+    halitosiDescription
   ])
 
   return loading ? (
@@ -180,7 +217,7 @@ const Exam: React.FC = (props: any) => {
     </Container>
   ) : (
     <Container>
-      <Header toggleDrawer={() => props.navigation.goBack()} isHeader={false} />
+      <Header actionProfile={() => props.navigation.navigate('Profile')}  toggleDrawer={() => props.navigation.goBack()} isHeader={false} />
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}>
         <Content>
           <ImageStyled source={{
@@ -188,18 +225,24 @@ const Exam: React.FC = (props: any) => {
           }} />
           <Form ref={formRef} onSubmit={handleSubmit}>
             <Picker 
-              data={DATA} 
+              data={halitosisOne} 
               icon="list"
-              setValue={setLevel}
-              value={level} />
-            <Input
-              autoCorrect={false}
-              autoCapitalize="none"
-              name="description"
-              icon="edit"
-              multiline={true}
-              placeholder="Descrição do diagnóstico"
-            />
+              setValue={setHalitosi}
+              value={halitosi} />
+            {halitosiDescription ? (
+              <Input
+                autoCorrect={false}
+                autoCapitalize="none"
+                name="description"
+                icon="edit"
+                multiline={true}
+                placeholder={
+                  "Descrição da halitose"
+                }
+                onChangeText={(e) => setHalitosiDescription(e)}
+                value={halitosiDescription}
+              />
+            ) : null}
             <Picker 
               data={tipsOne} 
               icon="list"
@@ -210,7 +253,7 @@ const Exam: React.FC = (props: any) => {
               icon="list"
               setValue={setProductOne}
               value={productOne} />
-            <Button onPress={() => navigation.navigate('QuestionsDetail', { id: item.user })}>
+            <Button onPress={() => navigation.navigate('Questions', { id: item.user, search: true })}>
               Detalhes do paciente
             </Button>
             <Button onPress={() => {formRef.current?.submitForm()}}>

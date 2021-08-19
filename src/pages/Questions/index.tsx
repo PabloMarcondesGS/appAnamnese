@@ -1,87 +1,127 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { View, ActivityIndicator } from 'react-native';
+import { View, ActivityIndicator, Image, ScrollView, Alert } from 'react-native';
 import database from '@react-native-firebase/database';
 import { useNavigation } from '@react-navigation/native';
 import { format } from 'date-fns';
 import { map } from 'lodash';
 
-import { TouchableOpacity} from 'react-native';
-// import Icon from 'react-native-vector-icons/Feather';
-import { Container, styles, TextStyled, ViewContainer, TitleStyled } from './styles'
-import { Card, Title, Paragraph, Checkbox, Button } from 'react-native-paper';
 import { useAuth } from '../../hooks/auth';
+// import Icon from 'react-native-vector-icons/Feather';
+import { Container, styles, TextStyled, 
+  ViewContainer, CardStyled, Title, ViewOption, TextStyledOption } from './styles'
+import { Card, Paragraph, Checkbox, Switch } from 'react-native-paper';
+import Button from '../../componentes/Button';
+
+import logoImg from '../../assets/cyb-logo-maior.png';
 import Header from '../../componentes/Header';
 
 const Questions: React.FC = (props: any) => {
-  const { user } = useAuth();
+  const userId = props.route.params.item
+  const {email, password} = props.route.params
+  const { signIn, user } = useAuth();
   const navigation = useNavigation();
   const [loading, setLoading] = useState(true);
 
   const [isAnsered, setIsAnsered] = useState(false);
 
-  const [checkedOneYes, setCheckedOneYes] = useState(true);
-  const [checkedOneNo, setCheckedOneNo] = useState(false);
-  const [checkedTwoYes, setCheckedTwoYes] = useState(true);
-  const [checkedTwoNo, setCheckedTwoNo] = useState(false);
-  const [checkedThreeYes, setCheckedThreeYes] = useState(true);
-  const [checkedThreeNo, setCheckedThreeNo] = useState(false);
-  const [checkedFourYes, setCheckedFourYes] = useState(true);
-  const [checkedFourNo, setCheckedFourNo] = useState(false);
-  const [checkedFiveYes, setCheckedFiveYes] = useState(true);
-  const [checkedFiveNo, setCheckedFiveNo] = useState(false);
-  const [checkedSixYes, setCheckedSixYes] = useState(true);
-  const [checkedSixNo, setCheckedSixNo] = useState(false);
-  const [checkedSevenYes, setCheckedSevenYes] = useState(true);
-  const [checkedSevenNo, setCheckedSevenNo] = useState(false);
+  const [checkedOneYes, setCheckedOneYes] = useState(false);
+  const [checkedTwoYes, setCheckedTwoYes] = useState(false);
+  const [checkedThreeYes, setCheckedThreeYes] = useState(false);
+  const [checkedFourYes, setCheckedFourYes] = useState(false);
+  const [checkedFiveYes, setCheckedFiveYes] = useState(false);
+  const [checkedSixYes, setCheckedSixYes] = useState(false);
+  const [checkedSevenYes, setCheckedSevenYes] = useState(false);
+  const [question, setQuestion] = useState()
 
-  const handleSubmit = useCallback(() => {
+  const handleSubmit = useCallback(async () => {
     const date = format(new Date(), 'dd/MM/yyyy')
-    database().ref(`questions`).push({
-      questionOne: checkedOneYes ? true : false,
-      questionTwo: checkedTwoYes ? true : false,
-      questionThree: checkedThreeYes ? true : false,
-      questionFour: checkedFourYes ? true : false,
-      questionFive: checkedFiveYes ? true : false,
-      questionSix: checkedSixYes ? true : false,
-      questionSeven: checkedSevenYes ? true : false,
-      date,
-      user: user.uid
-    });
+   
+    if(props && props.route && props.route.params && props.route.params.search){
+      try {
+        if(question) {
+          database()
+            .ref(`questions`)
+            .orderByChild('user')
+            .equalTo(user.uid)
+            .on("value", function(snapshot) {
+              snapshot.forEach(function(data) {
+                console.log(data.key);
+                database()
+                  .ref(`questions`)
+                  .child(data.key)
+                  .update({
+                    questionOne: checkedOneYes ? true : false,
+                    questionTwo: checkedTwoYes ? true : false,
+                    questionThree: checkedThreeYes ? true : false,
+                    questionFour: checkedFourYes ? true : false,
+                    questionFive: checkedFiveYes ? true : false,
+                    questionSix: checkedSixYes ? true : false,
+                    questionSeven: checkedSevenYes ? true : false,
+                    date
+                  });
+              });
+            });
+            Alert.alert('Salvo com sucesso!')
+        }
+      }catch (err){
+        console.log(err)
+        Alert.alert('Erro, tente novamente!')
+      }
+    } else {
+      database().ref(`questions`).push({
+        questionOne: checkedOneYes ? true : false,
+        questionTwo: checkedTwoYes ? true : false,
+        questionThree: checkedThreeYes ? true : false,
+        questionFour: checkedFourYes ? true : false,
+        questionFive: checkedFiveYes ? true : false,
+        questionSix: checkedSixYes ? true : false,
+        questionSeven: checkedSevenYes ? true : false,
+        date,
+        user: userId
+      });
+      await signIn({email, password});
+    }
     setIsAnsered(true);
   }, [
-    user,
+    props,
+    userId,
     checkedOneYes, 
     checkedTwoYes, 
     checkedThreeYes,
     checkedFourYes,
     checkedFiveYes,
     checkedSixYes,
-    checkedSevenYes
+    checkedSevenYes,
+    question,
+    user
   ]);
 
 
   const getData = useCallback(async () => {
     setLoading(true);
-    database()
-      .ref(`questions`)
-      .once('value', snapshot => {
-        const questionsData = map(snapshot.val(), x => x);
-        const question = questionsData.find(question => user.uid === question.user)
-        if (question) {
-          setIsAnsered(true)
-          setIsAnsered(true)
-          setCheckedOneYes(question.questionOne)
-          setCheckedTwoYes(question.questionTwo)
-          setCheckedThreeYes(question.questionThree)
-          setCheckedFourYes(question.questionFour)
-          setCheckedFiveYes(question.questionFive)
-          setCheckedSixYes(question.questionSix)
-          setCheckedSevenYes(question.questionSeven)
-        }
-        setLoading(false);
-      })
+    if(props && props.route && props.route.params && props.route.params.search){
+      database()
+        .ref(`questions`)
+        .once('value', snapshot => {
+          const questionsData = map(snapshot.val(), x => x);
+          const question = questionsData.find(question => userId === question.user)
+          if (question) {
+            setIsAnsered(true)
+            setIsAnsered(true)
+            setCheckedOneYes(question.questionOne)
+            setCheckedTwoYes(question.questionTwo)
+            setCheckedThreeYes(question.questionThree)
+            setCheckedFourYes(question.questionFour)
+            setCheckedFiveYes(question.questionFive)
+            setCheckedSixYes(question.questionSix)
+            setCheckedSevenYes(question.questionSeven)
+            setQuestion(question)
+          }
+          setLoading(false);
+        })
+    }
     setLoading(false);
-  }, [user.uid])
+  }, [props])
 
   useEffect(() => {
     getData();
@@ -93,283 +133,115 @@ const Questions: React.FC = (props: any) => {
     </View>
   ) : (
     <View style={{ flex: 1 }}>
-      <Header toggleDrawer={props.navigation.toggleDrawer} />
+      {props && props.route.params && props.route.params.search ? (
+        <Header isHeader={false}  actionProfile={() => navigation.navigate('ProfileEdit')}  toggleDrawer={props.navigation.goBack} />
+      ) : null}
+    <ScrollView
+        showsVerticalScrollIndicator={false}
+      >
       <Container>
-        {isAnsered ? (
-          <ViewContainer>
-            <Card style={{ marginBottom: 16 }}>
-              <Card.Content>
-                <Title>Você já preencheu o formulário</Title>
-                <Card style={{ maxHeight: 140, marginBottom: 16 }}>
-                  <Card.Content>
-                    <Paragraph>Você tem boca seca?</Paragraph>
-                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                      <Title>{checkedOneYes ? 'Sim' : 'Não'}</Title>
-                    </View>
-                  </Card.Content>
-                </Card>
-                <Card style={{ maxHeight: 140, marginBottom: 16 }}>
-                  <Card.Content>
-                    <Paragraph>Você respira pela boca?</Paragraph>
-                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                      <Title>{checkedTwoYes ? 'Sim' : 'Não'}</Title>
-                    </View>
-                  </Card.Content>
-                </Card>
+        <Image style={{ width: 80, height: 80 }}  source={logoImg}/>
+        <ViewContainer>
+          <Title>
+            {props && props.route && props.route.params && props.route.params.search 
+            ? 'Detalhes do paciente' : 'Agora vamos conhecer um pouquinho sobre você'
+          }</Title>
+          <CardStyled>
+            <TextStyled>
+            {props && props.route && props.route.params && props.route.params.search 
+              ? 'Paciente tem a boca seca?' : 'Você tem boca seca?'
+            }</TextStyled>
+              <ViewOption>
+                <TextStyledOption>Não</TextStyledOption>
+                <Switch value={checkedOneYes} onValueChange={() => setCheckedOneYes(!checkedOneYes)} />
+                <TextStyledOption>Sim</TextStyledOption>
+              </ViewOption>
+          </CardStyled>
+          <CardStyled>
+            <TextStyled>
+            {props && props.route && props.route.params && props.route.params.search 
+              ? 'Paciente respira pela boca?' : 'Você respira pela boca?'
+            }</TextStyled>
+              <ViewOption>
+                <TextStyledOption>Não</TextStyledOption>
+                <Switch value={checkedTwoYes} onValueChange={() => setCheckedTwoYes(!checkedTwoYes)} />
+                <TextStyledOption>Sim</TextStyledOption>
+              </ViewOption>
+          </CardStyled>
+          <CardStyled>
+            <TextStyled>
+            {props && props.route && props.route.params && props.route.params.search 
+              ? 'Paciente sente frequentemente um gosto ruim na boca?' 
+              : 'Você sente frequentemente um gosto ruim na boca?'
+            }</TextStyled>
+              <ViewOption>
+                <TextStyledOption>Não</TextStyledOption>
+                <Switch value={checkedThreeYes} onValueChange={() => setCheckedThreeYes(!checkedThreeYes)} />
+                <TextStyledOption>Sim</TextStyledOption>
+              </ViewOption>
+          </CardStyled>
+          <CardStyled>
+            <TextStyled>
+            {props && props.route && props.route.params && props.route.params.search 
+              ? 'Paciente já consultou um especialista sobre isso?' 
+              : 'Você já consultou um especialista sobre isso?'
+            }</TextStyled>
+              <ViewOption>
+                <TextStyledOption>Não</TextStyledOption>
+                <Switch value={checkedFourYes} onValueChange={() => setCheckedFourYes(!checkedFourYes)} />
+                <TextStyledOption>Sim</TextStyledOption>
+              </ViewOption>
+          </CardStyled>
+          <CardStyled>
+            <TextStyled>
+            {props && props.route && props.route.params && props.route.params.search 
+              ? 'Paciente costuma escovar a lingua?' 
+              : 'Você costuma escovar a lingua?'
+            }</TextStyled>
+              <ViewOption>
+                <TextStyledOption>Não</TextStyledOption>
+                <Switch value={checkedFiveYes} onValueChange={() => setCheckedFiveYes(!checkedFiveYes)} />
+                <TextStyledOption>Sim</TextStyledOption>
+              </ViewOption>
+          </CardStyled>
+          <CardStyled>
+            <TextStyled>
+            {props && props.route && props.route.params && props.route.params.search 
+              ? 'Paciente costuma se afastar das pessoas por isso?' 
+              : 'Você costuma se afastar das pessoas por isso?'
+            }</TextStyled>
+              <ViewOption>
+                <TextStyledOption>Não</TextStyledOption>
+                <Switch value={checkedSixYes} onValueChange={() => setCheckedSixYes(!checkedSixYes)} />
+                <TextStyledOption>Sim</TextStyledOption>
+              </ViewOption>
+          </CardStyled>
+          <CardStyled>
+            <TextStyled>
+            {props && props.route && props.route.params && props.route.params.search 
+              ? 'Paciente acha seu mal halito forte?' 
+              : 'Você acha seu mal halito forte?'
+            }</TextStyled>
+              <ViewOption>
+                <TextStyledOption>Não</TextStyledOption>
+                <Switch value={checkedSevenYes} onValueChange={() => setCheckedSevenYes(!checkedSevenYes)} />
+                <TextStyledOption>Sim</TextStyledOption>
+              </ViewOption>
+          </CardStyled>
 
-                <Card style={{ maxHeight: 170, marginBottom: 16 }}>
-                  <Card.Content>
-                    <Paragraph>Você sente frequentemente um gosto ruim na boca?</Paragraph>
-                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                      <Title>{checkedThreeYes ? 'Sim' : 'Não'}</Title>
-                    </View>
-                  </Card.Content>
-                </Card>
-
-                <Card style={{ maxHeight: 180, marginBottom: 16 }}>
-                  <Card.Content>
-                    <Paragraph>Você já consultou um especialista sobre isso?</Paragraph>
-                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                      <Title>{checkedFourYes ? 'Sim' : 'Não'}</Title>
-                    </View>
-                  </Card.Content>
-                </Card>
-
-                <Card style={{ maxHeight: 150, marginBottom: 16 }}>
-                  <Card.Content>
-                    <Paragraph>Você costuma escovar a lingua?</Paragraph>
-                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                      <Title>{checkedFiveYes ? 'Sim' : 'Não'}</Title>
-                    </View>
-                  </Card.Content>
-                </Card>
-
-                <Card style={{ maxHeight: 180, marginBottom: 16 }}>
-                  <Card.Content>
-                    <Paragraph>Você costuma se afastar das pessoas por isso?</Paragraph>
-                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                      <Title>{checkedSixYes ? 'Sim' : 'Não'}</Title>
-                    </View>
-                  </Card.Content>
-                </Card>
-
-                <Card style={{ maxHeight: 180, marginBottom: 16 }}>
-                  <Card.Content>
-                    <Paragraph>Você acha seu mal halito forte?</Paragraph>
-                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                      <Title>{checkedSevenYes ? 'Sim' : 'Não'}</Title>
-                    </View>
-                  </Card.Content>
-                </Card>
-                <Button 
-                  onPress={() => navigation.goBack()}
-                  mode="contained" 
-                  icon="arrow-left" 
-                  style={{ 
-                    marginTop: 24, 
-                    backgroundColor: '#42b6d9',
-                  }}>
-                  Voltar
-                </Button>
-              </Card.Content>
-            </Card>
-          </ViewContainer>
+        </ViewContainer>
+        {props && props.route && props.route.params && props.route.params.search ? (
+          <View style={{paddingTop: 24, width: '100%', justifyContent: 'center', alignItems: 'center'}}>
+            <Button width={50} onPress={handleSubmit}>Salvar</Button>
+          </View>
         ) : (
-          <ViewContainer>
-            <TitleStyled>Agora vamos conhecer um pouquinho sobre você</TitleStyled>
-            <Card style={{ maxHeight: 140, marginBottom: 16 }}>
-              <Card.Content>
-                <Title>Você tem boca seca?</Title>
-                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                  <Paragraph>Sim</Paragraph>
-                  <Checkbox
-                    status={checkedOneYes ? 'checked' : 'unchecked'}
-                    onPress={() => {
-                      setCheckedOneYes(!checkedOneYes);
-                      setCheckedOneNo(checkedOneYes ? true : false);
-                    }}
-                  />
-                </View>
-                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                  <Paragraph>Não</Paragraph>
-                  <Checkbox
-                    status={checkedOneNo ? 'checked' : 'unchecked'}
-                    onPress={() => {
-                      setCheckedOneNo(!checkedOneNo);
-                      setCheckedOneYes(checkedOneNo ? true : false);
-                    }}
-                  />
-                </View>
-              </Card.Content>
-            </Card>
-            <Card style={{ maxHeight: 140, marginBottom: 16 }}>
-              <Card.Content>
-                <Title>Você respira pela boca?</Title>
-                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                  <Paragraph>Sim</Paragraph>
-                  <Checkbox
-                    status={checkedTwoYes ? 'checked' : 'unchecked'}
-                    onPress={() => {
-                      setCheckedTwoYes(!checkedTwoYes);
-                      setCheckedTwoNo(checkedTwoYes ? true : false);
-                    }}
-                  />
-                </View>
-                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                  <Paragraph>Não</Paragraph>
-                  <Checkbox
-                    status={checkedTwoNo ? 'checked' : 'unchecked'}
-                    onPress={() => {
-                      setCheckedTwoNo(!checkedTwoNo);
-                      setCheckedTwoYes(checkedTwoNo ? true : false);
-                    }}
-                  />
-                </View>
-              </Card.Content>
-            </Card>
-
-            <Card style={{ maxHeight: 170, marginBottom: 16 }}>
-              <Card.Content>
-                <Title>Você sente frequentemente um gosto ruim na boca?</Title>
-                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                  <Paragraph>Sim</Paragraph>
-                  <Checkbox
-                    status={checkedThreeYes ? 'checked' : 'unchecked'}
-                    onPress={() => {
-                      setCheckedThreeYes(!checkedThreeYes);
-                      setCheckedThreeNo(checkedThreeYes ? true : false);
-                    }}
-                  />
-                </View>
-                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                  <Paragraph>Não</Paragraph>
-                  <Checkbox
-                    status={checkedThreeNo ? 'checked' : 'unchecked'}
-                    onPress={() => {
-                      setCheckedThreeNo(!checkedThreeNo);
-                      setCheckedThreeYes(checkedThreeNo ? true : false);
-                    }}
-                  />
-                </View>
-              </Card.Content>
-            </Card>
-
-            <Card style={{ maxHeight: 180, marginBottom: 16 }}>
-              <Card.Content>
-                <Title>Você já consultou um especialista sobre isso?</Title>
-                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                  <Paragraph>Sim</Paragraph>
-                  <Checkbox
-                    status={checkedFourYes ? 'checked' : 'unchecked'}
-                    onPress={() => {
-                      setCheckedFourYes(!checkedFourYes);
-                      setCheckedFourNo(checkedFourYes ? true : false);
-                    }}
-                  />
-                </View>
-                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                  <Paragraph>Não</Paragraph>
-                  <Checkbox
-                    status={checkedFourNo ? 'checked' : 'unchecked'}
-                    onPress={() => {
-                      setCheckedFourNo(!checkedFourNo);
-                      setCheckedFourYes(checkedFourNo ? true : false);
-                    }}
-                  />
-                </View>
-              </Card.Content>
-            </Card>
-
-            <Card style={{ maxHeight: 150, marginBottom: 16 }}>
-              <Card.Content>
-                <Title>Você costuma escovar a lingua?</Title>
-                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                  <Paragraph>Sim</Paragraph>
-                  <Checkbox
-                    status={checkedFiveYes ? 'checked' : 'unchecked'}
-                    onPress={() => {
-                      setCheckedFiveYes(!checkedFiveYes);
-                      setCheckedFiveNo(checkedFiveYes ? true : false);
-                    }}
-                  />
-                </View>
-                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                  <Paragraph>Não</Paragraph>
-                  <Checkbox
-                    status={checkedFiveNo ? 'checked' : 'unchecked'}
-                    onPress={() => {
-                      setCheckedFiveNo(!checkedFiveNo);
-                      setCheckedFiveYes(checkedFiveNo ? true : false);
-                    }}
-                  />
-                </View>
-              </Card.Content>
-            </Card>
-
-            <Card style={{ maxHeight: 180, marginBottom: 16 }}>
-              <Card.Content>
-                <Title>Você costuma se afastar das pessoas por isso?</Title>
-                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                  <Paragraph>Sim</Paragraph>
-                  <Checkbox
-                    status={checkedSixYes ? 'checked' : 'unchecked'}
-                    onPress={() => {
-                      setCheckedSixYes(!checkedSixYes);
-                      setCheckedSixNo(checkedSixYes ? true : false);
-                    }}
-                  />
-                </View>
-                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                  <Paragraph>Não</Paragraph>
-                  <Checkbox
-                    status={checkedSixNo ? 'checked' : 'unchecked'}
-                    onPress={() => {
-                      setCheckedSixNo(!checkedSixNo);
-                      setCheckedSixYes(checkedSixNo ? true : false);
-                    }}
-                  />
-                </View>
-              </Card.Content>
-            </Card>
-
-            <Card style={{ maxHeight: 180, marginBottom: 16 }}>
-              <Card.Content>
-                <Title>Você acha seu mal halito forte?</Title>
-                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                  <Paragraph>Sim</Paragraph>
-                  <Checkbox
-                    status={checkedSevenYes ? 'checked' : 'unchecked'}
-                    onPress={() => {
-                      setCheckedSevenYes(!checkedSevenYes);
-                      setCheckedSevenNo(checkedSevenYes ? true : false);
-                    }}
-                  />
-                </View>
-                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                  <Paragraph>Não</Paragraph>
-                  <Checkbox
-                    status={checkedSevenNo ? 'checked' : 'unchecked'}
-                    onPress={() => {
-                      setCheckedSevenNo(!checkedSevenNo);
-                      setCheckedSevenYes(checkedSevenNo ? true : false);
-                    }}
-                  />
-                </View>
-              </Card.Content>
-            </Card>
-
-            
-            <View style={{ marginBottom: 120 }}>
-              <TouchableOpacity
-                onPress={handleSubmit}
-                style={styles.buttonStyle}
-              >
-                <TextStyled style={styles.textButtonStyle}>Salvar</TextStyled>
-              </TouchableOpacity>
-            </View>
-          </ViewContainer>
+          <View style={{paddingTop: 24, width: '100%', justifyContent: 'center', alignItems: 'center'}}>
+            <Button width={50} onPress={handleSubmit}>Enviar</Button>
+          </View>
         )}
       </Container>
+            
+      </ScrollView>
     </View>
   );
 };

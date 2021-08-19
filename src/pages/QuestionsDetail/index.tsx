@@ -13,7 +13,7 @@ import { useAuth } from '../../hooks/auth';
 import Header from '../../componentes/Header';
 
 const QuestionsDetail: React.FC = (props: any) => {
-  const user = props.route.params.id;
+  const {user} = useAuth();
   const navigation = useNavigation();
   const [loading, setLoading] = useState(true);
 
@@ -60,7 +60,7 @@ const QuestionsDetail: React.FC = (props: any) => {
     </View>
   ) : (
     <View style={{ flex: 1 }}>
-      <Header toggleDrawer={() => props.navigation.goBack()}  isHeader={false}/>
+      <Header actionProfile={() => props.navigation.navigate('Profile')}  toggleDrawer={() => props.navigation.goBack()}  isHeader={false}/>
       <Container>
         {isAnsered ? (
           <ViewContainer>

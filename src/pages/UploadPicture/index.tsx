@@ -1,20 +1,21 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Text, View, Alert, Platform, ActivityIndicator, Image } from 'react-native';
-import { Button } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Feather';
 import storage from '@react-native-firebase/storage';
 import RNFetchBlob from 'rn-fetch-blob'
 import AsyncStorage from '@react-native-community/async-storage';
-import database from '@react-native-firebase/database';
-import { format } from 'date-fns';
 
 import { useAuth } from '../../hooks/auth';
-import { TouchableImage, ViewStyled, TextTitleNumber, TextTitle } from './styles'
+import { TouchableImage, ViewStyled, TextTitleNumber, TextTitle, Button } from './styles'
 import Header from '../../componentes/Header';
 import Camera from '../../componentes/Camera';
 
 import imgCamera from '../../assets/camera.jpg' 
-import imgLingua from '../../assets/lingua.jpg' 
+import imgLingua from '../../assets/lingua.jpeg' 
+import imgLinguaOne from '../../assets/lingua-one.png' 
+import {firstAccess} from '../../hooks/access'
+import Modal from '../../componentes/Modal'
+import { colors } from '../../styles';
 
 const UploadPicture: React.FC = (props: any) => {
   const { user } = useAuth();
@@ -27,6 +28,9 @@ const UploadPicture: React.FC = (props: any) => {
   const [stepTwo, setStepTwo] = useState(false);
   const [stepThree, setStepThree] = useState(false);
   const [stepFour, setStepFour] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [image, setImage] = useState()
+  const {secondAccess} = firstAccess();
 
   useEffect(() => {
     setLoading(true);
@@ -132,45 +136,52 @@ const UploadPicture: React.FC = (props: any) => {
 
   const onChangePhoto = useCallback(async (newPhoto) => {
     setPhoto(newPhoto);
+    setLoading(true);
     if(newPhoto) {
       const source = { uri: newPhoto };
-      const month = new Date().getMonth();
-      const filename = source.uri.substring(source.uri.lastIndexOf('/') + 1);
-      const fileUri = await getPathForFirebaseStorage(source.uri)
-      const task = storage()
-        .ref(`images/${month}`)
-        .child(`${filename}----${user.uid}----`)
-        .putFile(fileUri)
-        .then(snapshot => {
-          const date = format(new Date(), 'dd/MM/yyyy');
-          database()
-            .ref(`exams`)
-            .push({
-              user: user.uid,
-              image: snapshot.metadata.fullPath,
-              date,
-              active: true
-            }).then(function (value) {
-              const splitVal = String(value).split('/');
-              database()
-                .ref(`exams/${String(value).split('/')[splitVal.length - 1]}`)
-                .update({ id: String(value).split('/')[splitVal.length - 1] });
-            });
-        });
-      try {
-        await task;
-      } catch (e) {
-        Alert.alert('Erro ao enviar a imagem');
-        return;
-      }
-      Alert.alert(
-        'Envio concluído!',
-        'Sua foto foi enviada para o nosso banco de dados'
-      );
-      setIsValid(false);
-      setLoading(false);
+      setOpen(true)
+      setImage(source.uri)
+    //   const filename = source.uri.substring(source.uri.lastIndexOf('/') + 1);
+    //   const fileUri = await getPathForFirebaseStorage(source.uri)
+    //   const task = storage()
+    //     .ref(`images/${month}`)
+    //     .child(`${filename}----${user.uid}----`)
+    //     .putFile(fileUri)
+    //     .then(snapshot => {
+    //       const date = format(new Date(), 'dd/MM/yyyy');
+    //       database()
+    //         .ref(`exams`)
+    //         .push({
+    //           user: user.uid,
+    //           image: snapshot.metadata.fullPath,
+    //           date,
+    //           active: true
+    //         }).then(async function (value) {
+    //           const splitVal = String(value).split('/');
+    //           database()
+    //             .ref(`exams/${String(value).split('/')[splitVal.length - 1]}`)
+    //             .update({ id: String(value).split('/')[splitVal.length - 1] });
+    //           await secondAccess()
+    //         });
+    //     });
+    //   try {
+    //     await task;
+    //   } catch (e) {
+    //     Alert.alert('Erro ao enviar a imagem');
+    //     setLoading(false);
+    //     return;
+    //   }
+    //   Alert.alert(
+    //     'Envio concluído!',
+    //     'Sua foto foi enviada para o nosso banco de dados'
+    //   );
+    //   setIsValid(false);
+    //   setLoading(false);
     }
-    setIsCameraVisible(false);
+    // setIsCameraVisible(false);
+    setLoading(false);
+
+
     // handleUpdatePicture();
   }, [user]);
 
@@ -180,9 +191,9 @@ const UploadPicture: React.FC = (props: any) => {
     </View>
   ) : (
     <View style={{flex: 1}}>
-      <Header toggleDrawer={props.navigation.toggleDrawer}  />
+      <Header actionProfile={() => props.navigation.navigate('Profile')}  toggleDrawer={() => props.navigation.navigate('Settings')}  />
       {stepOne && !stepTwo && !stepThree && !stepFour ? (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#42b6d9'}} >
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}} >
           <TextTitleNumber>Passo 1</TextTitleNumber>
           <TextTitle>Escolha um local com boa iluminação e use a câmera de "SELFIE" do celular (câmera frontal)</TextTitle>
           <Image source={imgCamera} style={{ width: 210, height: 210, borderRadius: 16 }} />
@@ -193,10 +204,10 @@ const UploadPicture: React.FC = (props: any) => {
         </View>
       ) : <View /> }
       {!stepOne && stepTwo && !stepThree && !stepFour ? (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#42b6d9'}} >
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}} >
           <TextTitleNumber>Passo 2</TextTitleNumber>
           <TextTitle>Posicione a câmera em frente a boca, coloque a língua para fora como na imagem abaixo:</TextTitle>
-          <Image source={imgLingua} style={{ width: 210, height: 210, borderRadius: 16 }} />
+          <Image source={imgLinguaOne} style={{ width: 210, height: 210, borderRadius: 16 }} />
           <Button 
             style={{ marginTop: 24 }} 
             mode="contained"
@@ -204,7 +215,7 @@ const UploadPicture: React.FC = (props: any) => {
         </View>
       ) : <View /> }
       {!stepOne && !stepTwo && stepThree && !stepFour ? (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#42b6d9'}} >
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}} >
           <TextTitleNumber>Passo 3</TextTitleNumber>
           <TextTitle>É importante que a região destacada na imagem tenha boa iluminação e visibilidade:</TextTitle>
           <Image source={imgLingua} style={{ width: 210, height: 210, borderRadius: 16 }} />
@@ -215,32 +226,37 @@ const UploadPicture: React.FC = (props: any) => {
         </View>
       ) : <View /> }
       {!stepOne && !stepTwo && !stepThree && stepFour ? (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#42b6d9'}} >
-            {isValid ? (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}} >
+            {/* {isValid ? ( */}
               <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                 <Camera 
                   isVisible={isCameraVisible} 
                   onChangePhoto={onChangePhoto}
-                  onCloseCamera={onCloseCamera} />
+                  onCloseCamera={onCloseCamera}
+                  setLoading={setLoading}
+                  loading={loading} />
                 <ViewStyled>
                   <TouchableImage onPress={() => setIsCameraVisible(true)}>
                     <Icon
                       name="image"
                       size={90}
-                      color="#fff" />
+                      color={colors.primary} />
                   </TouchableImage>
                 </ViewStyled>
-                <Text style={{color: "#fff"}}>Clique para selecionar uma imagem</Text>
+                <Text style={{color: colors.primary}}>Clique acima para abrir a câmera</Text>
                 <Button 
                   style={{ marginTop: 24 }} 
                   mode="contained"
                   onPress={handleStepZero}>Como tirar a foto corretamente</Button>
               </View>
-            ) : (
+            {/* ) : (
               <Text>Usuário já fez upload este mês</Text>
-            )}
+            )} */}
         </View>
       ) : <View /> }
+      <Modal 
+        isModalVisible={open}  setModalVisible={setOpen} image={image} setLoading={setLoading}
+      />
     </View>
   );
 };

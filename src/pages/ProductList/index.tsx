@@ -6,7 +6,9 @@ import { map } from 'lodash';
 import { 
   Container,
   Content,
-  FlatListStyled
+  FlatListStyled,
+  TouchableOpacity,
+  Text
 } from './styles';
 import Header from '../../componentes/Header';
 
@@ -17,6 +19,14 @@ const ProductList: React.FC = (props: any) => {
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [products, setProducts] = useState([]);
+  const [productsSelected, setProductsSelected] = useState([]);
+
+  const handleDelete = useCallback(() => {
+    for (const item of productsSelected) {
+      database().ref().child('products').child(item.id).remove();
+    }
+    handleRefresh()
+  }, [productsSelected])
 
   const getData = useCallback(async () => {
     setLoading(true);
@@ -49,20 +59,36 @@ const ProductList: React.FC = (props: any) => {
     setRefreshing(false);
   }, [getData])
 
+  useEffect(() => {
+    if (props && props.route && props.route.params && props.route.params.update && props.route.params.update === true) {
+      handleRefresh()
+    }
+  }, [handleRefresh, props])
+
   return loading ? (
-    <Container style={{ flex: 1 }}>
-      <ActivityIndicator size="large" color="#fff" />
+    <Container style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <ActivityIndicator size="large" color="#005a72" />
     </Container>
   ) : (
     <Container>
-      <Header toggleDrawer={() => props.navigation.goBack()} isHeader={false} />
+      <Header actionProfile={() => props.navigation.navigate('Profile')}  toggleDrawer={() => props.navigation.goBack()} isHeader={false} />
       <Content>
+        <TouchableOpacity onPress={() => props.navigation.navigate('Product')}>
+          <Text>Adicionar  produto</Text>
+        </TouchableOpacity>
+        {productsSelected && productsSelected.length ? (
+          <TouchableOpacity onPress={handleDelete}>
+            <Text style={{color: 'red'}}>Apagar selecionados</Text>
+          </TouchableOpacity>
+        ) : null}
         <RefreshControl onRefresh={handleRefresh} style={{ flex: 1 }} refreshing={refreshing}>
           <FlatListStyled
             data={products}
             renderItem={({ item }: any) => (
               <Item
                 item={item}
+                handleRefresh={handleRefresh}
+                setProductsSelected={setProductsSelected}
               />
             )}
             keyExtractor={item => item.id}

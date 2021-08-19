@@ -1,12 +1,17 @@
 import styled from 'styled-components/native';
 import { RectButton } from 'react-native-gesture-handler';
+import { fonts, colors } from '../../styles'
 
-export const Container = styled(RectButton)`
-    width: 100%;
-    height: 60px;
-    background: #4682B4;
-    border-radius: 10px;
+interface ContainerProps{
+    width?: number;
+}
+
+export const Container = styled(RectButton)<ContainerProps>`
+    width: ${({width}) => width ? `${width}` : '100'}%;
+    background: ${colors.primary};
+    border-radius: 15px;
     margin-top: 8px;
+    padding: 10px 0;
 
     justify-content: center;
     align-items: center;
@@ -14,9 +19,9 @@ export const Container = styled(RectButton)`
 
 
 export const ButtonText = styled.Text`
-    font-family: 'RobotoSlab-Medium';
-    color: #ADD8E6;
-    font-size: 18px;
+    color: ${colors.white};
+    font-size: ${fonts.regular};
+    font-family: ${fonts.fontFamilyRegular};
 `;
 
 // talvez seja necessario retirar width: 100%;

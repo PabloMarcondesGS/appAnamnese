@@ -7,11 +7,12 @@ import React, {
     useCallback } from 'react';
 import { TextInputProps } from 'react-native';
 import {useField} from '@unform/core'
-import { Container, TextInput, Icon } from './styles';
+import { Container, TextInput, TextStyled, TextInputMaskStyled } from './styles';
 
 interface InputProps extends TextInputProps {
     name: string;
-    icon: string;
+    textBottom: string;
+    mask?: string;
 }
 
 interface InputValueReference {
@@ -22,7 +23,9 @@ interface InputRef {
     focus(): void
 }
 
-const Input: React.RefForwardingComponent<InputRef, InputProps> = ({ name, icon, ...rest }, ref) => {
+const Input: React.RefForwardingComponent<InputRef, InputProps> = (
+    { name, mask = null, textBottom, ...rest }, ref
+) => {
     const inputElementRef =  useRef<any>(null);
 
     const { registerField, defaultValue, fieldName, error} = useField(name);
@@ -64,24 +67,36 @@ const Input: React.RefForwardingComponent<InputRef, InputProps> = ({ name, icon,
     }, [fieldName, registerField])
 
     return (
-        <Container isFocused={isFocused} isErrored={!!error}>
-            <Icon
-                name={icon}
-                size={20}
-                color={isFocused || isFilled ? '#4682B4' : '#666360'}
-            />
-            <TextInput
-                ref={inputElementRef}
-                keyboardAppearance='dark'
-                placeholderTextColor="#666360"
-                defaultValue={defaultValue}
-                onFocus={handleInputFocus}
-                onBlur={handleInputBlur}
-                onChangeText={(value) => {
-                    inputValueRef.current.value = value;
-                }}
-                {...rest}
-            />
+        <Container>
+            {!mask ? (
+                <TextInput
+                    isFocused={isFocused} isErrored={!!error}
+                    ref={inputElementRef}
+                    keyboardAppearance='dark'
+                    defaultValue={defaultValue}
+                    onFocus={handleInputFocus}
+                    onBlur={handleInputBlur}
+                    onChangeText={(value) => {
+                        inputValueRef.current.value = value;
+                    }}
+                    {...rest}
+                />
+                ) : (
+                <TextInputMaskStyled
+                    isFocused={isFocused} isErrored={!!error}
+                    ref={inputElementRef}
+                    keyboardAppearance='dark'
+                    defaultValue={defaultValue}
+                    onFocus={handleInputFocus}
+                    onBlur={handleInputBlur}
+                    mask={mask}
+                    onChangeText={(value) => {
+                        inputValueRef.current.value = value;
+                    }}
+                    {...rest}
+                />
+                )}
+                <TextStyled>{textBottom}</TextStyled>
         </Container>
     );
 };

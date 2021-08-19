@@ -1,5 +1,4 @@
 import React, { useCallback, useRef, useState, useEffect } from 'react';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import ImagePicker from 'react-native-image-picker'
 import {
     Image,
@@ -20,21 +19,24 @@ import * as Yup from 'yup';
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
 import database from '@react-native-firebase/database';
-import { Checkbox, Button as ButtonPaper } from 'react-native-paper';
 import storage from '@react-native-firebase/storage';
 import RNFetchBlob from 'rn-fetch-blob'
 
 import { useAuth } from '../../hooks/auth';
 import Header from '../../componentes/Header';
+import { colors } from '../../styles'
 
 import getValidationErrors from '../../ultils/getValidationErrors';
 
-import Input from '../../componentes/Input';
-import Button from '../../componentes/Button';
+import Input from '../../componentes/InputTwo';
 
 import {
     Container,
     ViewImage,
+    Gradient, 
+    Button,
+    TextValues,
+    Title
 } from './styles';
 
 interface ProfileData {
@@ -54,7 +56,7 @@ const Profile: React.FC = (props: any) => {
     const [userData, setUserData] = useState({} as any);
 
     const emailInputRef = useRef<TextInput>(null);
-    const { user } = useAuth();
+    const { user, medic } = useAuth();
 
     const handleUpdateUser = useCallback(async (data: ProfileData) => {
         try {
@@ -94,12 +96,6 @@ const Profile: React.FC = (props: any) => {
             );
         }
     }, [navigation, male, date, user]);
-
-    const onChange = (event: any, selectedDate: any) => {
-    const currentDate = selectedDate || date;
-        setShow(Platform.OS === 'ios');
-        setDate(currentDate);
-    };
 
     async function getPathForFirebaseStorage (uri: any) {
       if (Platform.OS==="ios") return uri
@@ -224,12 +220,12 @@ const Profile: React.FC = (props: any) => {
       }, [images, user])
 
     return loading ? (
-        <View style={{ flex: 1 }}>
-          <ActivityIndicator size="large" color="#999" />
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+          <ActivityIndicator size="large" color="#005a72" />
         </View>
       ) : (
         <View style={{flex:1}}>
-            <Header toggleDrawer={props.navigation.toggleDrawer} />
+            <Header isHeader={false}  actionProfile={() => navigation.navigate('ProfileEdit')}  toggleDrawer={props.navigation.goBack} />
             <KeyboardAvoidingView
                 style={{ flex: 1 }}
                 behavior={Platform.OS =='ios' ? 'padding' : undefined}
@@ -240,16 +236,14 @@ const Profile: React.FC = (props: any) => {
                 >
                     <Container>
                         <ViewImage>
-                            <TouchableOpacity onPress={handleUpdatePicture}>
-                                {imageUser ? (
-                                    <Image 
-                                        style={{ width: 80, height: 80, borderRadius: 45 }} 
-                                        source={{ uri: imageUser }}
-                                         />
-                                ) : (
-                                    <Icon size={55} name="user" color="grey" />
-                                )}
-                            </TouchableOpacity>
+                            {imageUser ? (
+                                <Image 
+                                    style={{ width: 80, height: 80, borderRadius: 45 }} 
+                                    source={{ uri: imageUser }}
+                                      />
+                            ) : (
+                                <Icon size={55} name="user" color={colors.primary} />
+                            )}
                         </ViewImage>
                         <Form 
                             ref={formRef} 
@@ -261,76 +255,82 @@ const Profile: React.FC = (props: any) => {
                                 autoCapitalize="words"
                                 name="name"
                                 icon="user"
+                                prefix="Nome:"
                                 defaultValue={userData.name}
                                 placeholder="Nome"
                                 returnKeyType="next"
+                                editable={false}
                                 onSubmitEditing={() => {
                                     emailInputRef.current?.focus()
                                 }}
                             />
 
-                            <View style={{ 
-                                backgroundColor: 'white', 
-                                width: '100%',
-                                paddingLeft: 14,
-                                paddingRight: 14,
-                                paddingTop: 10,
-                                paddingBottom: 10,
-                                borderRadius: 8,
-                                marginBottom: 10,
-                                borderWidth: 2,
-                                borderColor: '#808080'
-                            }}>
-                                <Text>Data de nascimento:</Text>
-                                <View style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center', width: '100%' }}>
-                                    <ButtonPaper onPress={() => setShow(true)}>Selecionar data</ButtonPaper>
-                                    <Text>{date ? format(date, 'dd/MM/yyyy') : ''}</Text>
-                                </View>
-                                {show && (
-                                    <DateTimePicker
-                                        testID="dateTimePicker"
-                                        value={date}
-                                        mode='datetime'
-                                        display="default"
-                                        onChange={onChange} />
-                                )}
-                            </View>
+                            <Input
+                                autoCapitalize="words"
+                                name="email"
+                                icon="user"
+                                prefix="Email:"
+                                defaultValue={userData.email}
+                                returnKeyType="next"
+                                editable={false}
+                                onSubmitEditing={() => {
+                                    emailInputRef.current?.focus()
+                                }}
+                            />
+                            {!medic ? (
+                              <Input
+                                  autoCapitalize="words"
+                                  name="email"
+                                  icon="user"
+                                  prefix="Plano:"
+                                  defaultValue="FREE"
+                                  returnKeyType="next"
+                                  editable={false}
+                              />
+                            ) : <View />}
+
+                            <Input
+                                autoCapitalize="words"
+                                name="email"
+                                icon="user"
+                                prefix="Gênero:"
+                                defaultValue={userData.sex}
+                                returnKeyType="next"
+                                editable={false}
+                            />
+
+                            <Input
+                                autoCapitalize="words"
+                                name="signUp"
+                                icon="calendar"
+                                prefix="Data de Nasc.:"
+                                defaultValue={userData.birthDate}
+                                returnKeyType="next"
+                                editable={false}
+                            />
 
 
-                            <View style={{ 
-                                backgroundColor: 'white', 
-                                width: '100%',
-                                paddingLeft: 14,
-                                paddingRight: 14,
-                                paddingTop: 10,
-                                paddingBottom: 10,
-                                borderRadius: 8,
-                                marginBottom: 10,
-                                borderWidth: 2,
-                                borderColor: '#808080'
-                            }}>
-                                <Text>Sexo:</Text>
-                                <View style={{ display: 'flex', alignItems: 'center', flexDirection: 'row' }}>
-                                    <Checkbox
-                                        status={male ? 'checked' : 'unchecked'}
-                                        onPress={() => {
-                                            setMale(!male);
-                                            setFemale(male ? true : false);
-                                        }} />
-                                    <Text>Homem</Text>
-                                </View>
-                                <View style={{ display: 'flex', alignItems: 'center', flexDirection: 'row' }}>
-                                    <Checkbox
-                                        status={female ? 'checked' : 'unchecked'}
-                                        onPress={() => {
-                                            setFemale(!female);
-                                            setMale(female ? true : false);
-                                        }} />
-                                    <Text>Mulher</Text>
-                                </View>
-                            </View>
+                            <Input
+                                autoCapitalize="words"
+                                name="signUp"
+                                icon="calendar"
+                                prefix="Data de Cad.:"
+                                defaultValue={userData.signUp}
+                                returnKeyType="next"
+                                editable={false}
+                            />
 
-                            <Button onPress={() => {formRef.current?.submitForm();}}>Atualizar</Button>
+                            <Button onPress={() => navigation.navigate('ProfileEdit')}>
+                              <Gradient
+                                colors={[colors.primary,colors.secondary ]}
+                                start={{x: 0, y: 1}}
+                                end={{x: 1, y: 0}}>
+                                <TextValues>EDITAR PERFIL</TextValues>
+                              </Gradient>
+                            </Button>
+                            <TouchableOpacity onPress={() => navigation.navigate('Questions', {item: user.uid, search: true})}>
+                              <Title>EDITAR ANAMNESE</Title>
+                            </TouchableOpacity>
                         </Form>
                     </Container>
                 </ScrollView>

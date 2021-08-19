@@ -6,7 +6,9 @@ import { map } from 'lodash';
 import { 
   Container,
   Content,
-  FlatListStyled
+  FlatListStyled,
+  Text,
+  TouchableOpacity
 } from './styles';
 import Header from '../../componentes/Header';
 
@@ -17,6 +19,14 @@ const TipsList: React.FC = (props: any) => {
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [tips, setTips] = useState([]);
+  const [tipsSelected, setTipsSelected] = useState([]);
+
+  const handleDelete = useCallback(() => {
+    for (const item of tipsSelected) {
+      database().ref().child('tips').child(item.id).remove();
+    }
+    handleRefresh()
+  }, [tipsSelected])
 
   const getData = useCallback(async () => {
     setLoading(true);
@@ -47,24 +57,41 @@ const TipsList: React.FC = (props: any) => {
   const handleRefresh = useCallback(() => {
     setRefreshing(true);
     getData();
+    setTipsSelected([])
     setRefreshing(false);
   }, [getData])
 
+  useEffect(() => {
+    if (props && props.route && props.route.params && props.route.params.update && props.route.params.update === true) {
+      handleRefresh()
+    }
+  }, [handleRefresh, props])
+
   return loading ? (
-    <Container style={{ flex: 1 }}>
-      <ActivityIndicator size="large" color="#fff" />
+    <Container style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <ActivityIndicator size="large" color="#005a72" />
     </Container>
   ) : (
     <Container>
-      <Header toggleDrawer={() => props.navigation.goBack()} isHeader={false} />
+      <Header actionProfile={() => props.navigation.navigate('Profile')}  toggleDrawer={() => props.navigation.goBack()} isHeader={false} />
       <Content>
-        <View style={{ flex: 1, alignItems: 'center' }}>
+      <View style={{ flex: 1, alignItems: 'center' }}>
           <RefreshControl onRefresh={handleRefresh} style={{ flex: 1 }} refreshing={refreshing}>
-            <FlatListStyled
+        <TouchableOpacity style={{ marginBottom: 0 }} onPress={() => props.navigation.navigate('Tips')}>
+          <Text>Adicionar dica</Text>
+        </TouchableOpacity>
+        {tipsSelected && tipsSelected.length ? (
+          <TouchableOpacity onPress={handleDelete}>
+            <Text style={{color: 'red'}}>Apagar selecionados</Text>
+          </TouchableOpacity>
+        ) : null}
+         <FlatListStyled
               data={tips}
               renderItem={({ item }: any) => (
                 <Item
                   item={item}
+                  handleRefresh={handleRefresh}
+                  setTipsSelected={setTipsSelected}
                 />
               )}
               keyExtractor={item => item.id}

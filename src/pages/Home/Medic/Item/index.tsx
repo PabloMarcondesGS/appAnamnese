@@ -48,6 +48,7 @@ const Item: React.FC = ({ item }: any) => {
       </TitleStyled>
       <ButtonStyled 
         onPress={() => navigation.navigate('Exam', { item })}
+        color="#005a72"
         mode="contained">
         Ver imagem
       </ButtonStyled>
